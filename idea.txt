@@ -1,0 +1,27 @@
+USP:- User don't need to go on other platforms for trips or any booking related stuff.
+
+profile page :- mail google phone number 
+profile compliation page when you complete certain criteria like phone number and email should added.
+
+also add some verification like adhar , email and phone number
+
+concert booking, travel booking, stay 
+
+option bar mandatory
+
+Travel:- road, air, railway
+stay:- hotels, home stay, farmhouse booking
+Concert:- concert(suggestion page ke liye)
+
+Payment Integration  
+
+Notifications & Reminders
+
+Tour planning:- from shreyash web  
+
+Calendar Integration
+
+
+under development:- App format   
+
+search tab should be there(extra)
