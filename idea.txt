@@ -11,6 +11,7 @@ option bar mandatory
 
 Travel:- road, air, railway
 stay:- hotels, home stay, farmhouse booking
+cinema:- movie booking, theater booking
 Concert:- concert(suggestion page ke liye)
 
 Payment Integration  
@@ -20,6 +21,8 @@ Notifications & Reminders
 Tour planning:- from shreyash web  
 
 Calendar Integration
+
+terms and conditions
 
 
 under development:- App format   
