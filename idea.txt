@@ -27,4 +27,9 @@ terms and conditions
 
 under development:- App format   
 
+we can add a page where we compare the prices of train bus flight and similar kind of thing we can make.
+
+
+
+
 search tab should be there(extra)
