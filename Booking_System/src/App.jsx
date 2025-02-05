@@ -1,10 +1,10 @@
 import { useState } from "react";
 import "./App.css";
-
+import SignInSide from "./components/SignIn/SignInSlide";
 function App() {
   return (
     <>
-      <h1>ClickNReserve</h1>
+      <SignInSide />
     </>
   );
 }
