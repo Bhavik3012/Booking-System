@@ -5,7 +5,7 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className= "w-full bg-white shadow-2xl sticky top-0 z-50 border-b border-yellow-300 rounded-b-lg">
+    <header className="w-full bg-white shadow-2xl sticky top-0 z-50 border-b border-yellow-300 rounded-b-lg">
       <nav className="w-full mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-500 ease-in-out">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -22,45 +22,53 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex lg:space-x-8">
-            {["Home", "Trains", "Flights", "Hotels", "About"].map(
-              (item, index) => (
-                <NavLink
-                  key={index}
-                  to={item === "Home" ? "/" : `/${item}`}
-                  className={({ isActive }) =>
-                    `inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition transform duration-300 ease-in-out ${
-                      isActive
-                        ? "bg-gradient-to-r from-orange-500 to-yellow-500 text-white shadow-lg"
-                        : "text-gray-800 hover:bg-gradient-to-r hover:from-orange-200 hover:to-yellow-200 hover:text-gray-900"
-                    }`
-                  }
-                >
-                  {item}
-                </NavLink>
-              )
-            )}
+            {[
+              "Home",
+              "Trains",
+              "Flights",
+              "Hotels",
+              "Buses",
+              "Homestays",
+              "Trips",
+              "About",
+            ].map((item, index) => (
+              <NavLink
+                key={index}
+                to={item === "Home" ? "/" : `/${item}`}
+                className={({ isActive }) =>
+                  `inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition transform duration-300 ease-in-out ${
+                    isActive
+                      ? "bg-gradient-to-r from-orange-500 to-yellow-500 text-white shadow-lg"
+                      : "text-gray-800 hover:bg-gradient-to-r hover:from-orange-200 hover:to-yellow-200 hover:text-gray-900"
+                  }`
+                }
+              >
+                {item}
+              </NavLink>
+            ))}
           </div>
 
           {/* Action Buttons & Mobile Menu Toggle */}
           <div className="flex items-center">
             <div className="hidden lg:flex space-x-4">
               <Link
-                to="#"
+                to="/login"
                 className="px-4 py-2 text-sm font-medium text-orange-600 bg-white rounded-md shadow hover:bg-gray-100 transform transition duration-300 ease-in-out hover:scale-105"
               >
                 Log in
               </Link>
               <Link
-                to="#"
+                to="/Signup"
                 className="px-4 py-2 text-sm font-medium text-white bg-orange-600 rounded-md shadow hover:bg-orange-700 transform transition duration-300 ease-in-out hover:scale-105"
               >
                 Get Started
               </Link>
             </div>
-            {/* Mobile Menu Button */}  
+            {/* Mobile Menu Button */}
             <div className="lg:hidden">
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
+                aria-expanded={menuOpen}
                 className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-orange-600 transform transition duration-300 ease-in-out"
               >
                 <span className="sr-only">Toggle main menu</span>
@@ -102,25 +110,32 @@ export default function Header() {
         {menuOpen && (
           <div className="lg:hidden mt-2">
             <ul className="space-y-1 px-2 pb-3">
-              {["Home", "Trains", "Flights", "Hotels", "About"].map(
-                (item, index) => (
-                  <li key={index}>
-                    <NavLink
-                      to={item === "Home" ? "/" : `/${item}`}
-                      onClick={() => setMenuOpen(false)}
-                      className={({ isActive }) =>
-                        `block px-3 py-2 rounded-md text-base font-medium transition transform duration-300 ease-in-out ${
-                          isActive
-                            ? "bg-gradient-to-r from-orange-500 to-yellow-500 text-white shadow-lg"
-                            : "text-gray-800 hover:bg-gradient-to-r hover:from-orange-200 hover:to-yellow-200 hover:text-gray-900"
-                        }`
-                      }
-                    >
-                      {item}
-                    </NavLink>
-                  </li>
-                )
-              )}
+              {[
+                "Home",
+                "Trains",
+                "Flights",
+                "Buses",
+                "Hotels",
+                "Homestays",
+                "Trips",
+                "About",
+              ].map((item, index) => (
+                <li key={index}>
+                  <NavLink
+                    to={item === "Home" ? "/" : `/${item}`}
+                    onClick={() => setMenuOpen(false)}
+                    className={({ isActive }) =>
+                      `block px-3 py-2 rounded-md text-base font-medium transition transform duration-300 ease-in-out ${
+                        isActive
+                          ? "bg-gradient-to-r from-orange-500 to-yellow-500 text-white shadow-lg"
+                          : "text-gray-800 hover:bg-gradient-to-r hover:from-orange-200 hover:to-yellow-200 hover:text-gray-900"
+                      }`
+                    }
+                  >
+                    {item}
+                  </NavLink>
+                </li>
+              ))}
               <li className="mt-2 flex space-x-2 px-3">
                 <Link
                   to="#"

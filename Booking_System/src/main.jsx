@@ -8,7 +8,18 @@ import {
   createRoutesFromElements,
 } from "react-router";
 import Layout from "./Layout";
-import { Home, About, Flights, Hotels, Trains } from "./components/index";
+import {
+  Home,
+  About,
+  Flights,
+  Hotels,
+  Trains,
+  Buses,
+  Homestays,
+  Trips,
+  Login,
+  SignUp,
+} from "./components/index";
 
 const router = createBrowserRouter([
   {
@@ -34,6 +45,26 @@ const router = createBrowserRouter([
       {
         path: "/trains",
         element: <Trains />,
+      },
+      {
+        path: "/Buses",
+        element: <Buses />,
+      },
+      {
+        path: "/Homestays",
+        element: <Homestays />,
+      },
+      {
+        path: "/Trips",
+        element: <Trips />,
+      },
+      {
+        path: "/Login",
+        element: <Login />,
+      },
+      {
+        path: "/SignUp",
+        element: <SignUp />,
       },
     ],
   },

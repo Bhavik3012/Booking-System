@@ -6,5 +6,24 @@ import Header from "./Header/Header";
 import Hotels from "./Hotels/Hotels";
 import Trains from "./Trains/Trains";
 import HomeCard from "./Card/HomeCard";
+import Trips from "./Trips/Trips";
+import Homestays from "./Homestays/Homestays";
+import Buses from "./Buses/Buses";
+import Login from "./Login/Login";
+import SignUp from "./SignUp/Signup";
 
-export { Home, About, Footer, Flights, Header, Hotels, Trains, HomeCard };
+export {
+  Home,
+  About,
+  Footer,
+  Flights,
+  Header,
+  Hotels,
+  Trains,
+  Buses,
+  Homestays,
+  Trips,
+  HomeCard,
+  Login,
+  SignUp,
+};
