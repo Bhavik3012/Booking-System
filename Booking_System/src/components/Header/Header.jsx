@@ -5,23 +5,23 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="w-full bg-white shadow-2xl sticky top-0 z-50 border-b border-yellow-300 rounded-b-lg">
-      <nav className="w-full mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-500 ease-in-out">
+    <header className="w-full bg-[#FFF3E0] shadow-2xl sticky top-0 z-50 border-b border-[#FFF9C4] rounded-b-lg">
+      <nav className="w-full mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-300 ease-in-out">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link
             to="/"
-            className="flex-shrink-0 flex items-center transform transition duration-500 hover:scale-105"
+            className="flex-shrink-0 flex items-center transform transition duration-300 hover:scale-105"
           >
             <img
               src="https://alexharkness.com/wp-content/uploads/2020/06/logo-2.png"
               alt="Logo"
-              className="h-10 w-auto"
+              className="h-8 w-auto"
             />
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex lg:space-x-8">
+          <div className="hidden lg:flex lg:space-x-6">
             {[
               "Home",
               "Trains",
@@ -36,10 +36,10 @@ export default function Header() {
                 key={index}
                 to={item === "Home" ? "/" : `/${item}`}
                 className={({ isActive }) =>
-                  `inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition transform duration-300 ease-in-out ${
+                  `inline-flex items-center px-3 py-1 rounded-md text-base font-medium transition transform duration-300 ease-in-out hover:scale-105 ${
                     isActive
-                      ? "bg-gradient-to-r from-orange-500 to-yellow-500 text-white shadow-lg"
-                      : "text-gray-800 hover:bg-gradient-to-r hover:from-orange-200 hover:to-yellow-200 hover:text-gray-900"
+                      ? "bg-[#FFA726] text-white shadow-md"
+                      : "text-[#424242] hover:bg-[#FFF9C4] hover:text-[#FFA726]"
                   }`
                 }
               >
@@ -50,16 +50,16 @@ export default function Header() {
 
           {/* Action Buttons & Mobile Menu Toggle */}
           <div className="flex items-center">
-            <div className="hidden lg:flex space-x-4">
+            <div className="hidden lg:flex space-x-2">
               <Link
                 to="/login"
-                className="px-4 py-2 text-sm font-medium text-orange-600 bg-white rounded-md shadow hover:bg-gray-100 transform transition duration-300 ease-in-out hover:scale-105"
+                className="px-3 py-1 text-base font-medium text-[#424242] bg-white rounded-md shadow transition transform duration-300 ease-in-out hover:scale-105 hover:bg-[#FFF9C4]"
               >
                 Log in
               </Link>
               <Link
-                to="/Signup"
-                className="px-4 py-2 text-sm font-medium text-white bg-orange-600 rounded-md shadow hover:bg-orange-700 transform transition duration-300 ease-in-out hover:scale-105"
+                to="/signup"
+                className="px-3 py-1 text-base font-medium text-white bg-[#FB8C00] rounded-md shadow transition transform duration-300 ease-in-out hover:scale-105"
               >
                 Get Started
               </Link>
@@ -69,7 +69,7 @@ export default function Header() {
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
                 aria-expanded={menuOpen}
-                className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-orange-600 transform transition duration-300 ease-in-out"
+                className="inline-flex items-center justify-center p-2 rounded-md text-[#424242] hover:text-white hover:bg-[#FFA726] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#FFA726] transition transform duration-300 ease-in-out hover:scale-105"
               >
                 <span className="sr-only">Toggle main menu</span>
                 {menuOpen ? (
@@ -109,7 +109,7 @@ export default function Header() {
         {/* Mobile Navigation Menu */}
         {menuOpen && (
           <div className="lg:hidden mt-2">
-            <ul className="space-y-1 px-2 pb-3">
+            <ul className="space-y-2 px-2 pb-3">
               {[
                 "Home",
                 "Trains",
@@ -125,10 +125,10 @@ export default function Header() {
                     to={item === "Home" ? "/" : `/${item}`}
                     onClick={() => setMenuOpen(false)}
                     className={({ isActive }) =>
-                      `block px-3 py-2 rounded-md text-base font-medium transition transform duration-300 ease-in-out ${
+                      `block px-3 py-2 rounded-md text-base font-medium transition transform duration-300 ease-in-out hover:scale-105 ${
                         isActive
-                          ? "bg-gradient-to-r from-orange-500 to-yellow-500 text-white shadow-lg"
-                          : "text-gray-800 hover:bg-gradient-to-r hover:from-orange-200 hover:to-yellow-200 hover:text-gray-900"
+                          ? "bg-[#FFA726] text-white shadow-md"
+                          : "text-[#424242] hover:bg-[#FFF9C4] hover:text-[#FFA726]"
                       }`
                     }
                   >
@@ -136,16 +136,16 @@ export default function Header() {
                   </NavLink>
                 </li>
               ))}
-              <li className="mt-2 flex space-x-2 px-3">
+              <li className="mt-2 flex space-x-2 px-2">
                 <Link
-                  to="#"
-                  className="flex-1 px-4 py-2 text-sm font-medium text-orange-600 bg-white rounded-md shadow hover:bg-gray-100 transition transform duration-300 ease-in-out hover:scale-105 text-center"
+                  to="/login"
+                  className="flex-1 px-3 py-2 text-base font-medium text-[#424242] bg-white rounded-md shadow transition transform duration-300 ease-in-out hover:scale-105 hover:bg-[#FFF9C4] text-center"
                 >
                   Log in
                 </Link>
                 <Link
-                  to="#"
-                  className="flex-1 px-4 py-2 text-sm font-medium text-white bg-orange-600 rounded-md shadow hover:bg-orange-700 transition transform duration-300 ease-in-out hover:scale-105 text-center"
+                  to="/signup"
+                  className="flex-1 px-3 py-2 text-base font-medium text-white bg-[#FB8C00] rounded-md shadow transition transform duration-300 ease-in-out hover:scale-105 text-center"
                 >
                   Get Started
                 </Link>

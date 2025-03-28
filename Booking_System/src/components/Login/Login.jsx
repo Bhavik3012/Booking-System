@@ -4,25 +4,25 @@ import { Button } from "../ui/Button";
 
 export default function Login() {
   return (
-    <div className="min-h-screen bg-blue-50">
+    <div className="min-h-screen bg-[#FFF3E0] flex flex-col">
       {/* Header */}
-      <header className="w-full bg-white shadow py-4">
+      <header className="w-full bg-white shadow py-4 border-b border-[#FFF9C4]">
         <div className="container mx-auto px-4">
-          <h1 className="text-3xl text-blue-700 font-bold">Login</h1>
+          <h1 className="text-3xl text-[#424242] font-bold">Login</h1>
         </div>
       </header>
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-12 flex justify-center">
         <div className="w-full max-w-md bg-white p-8 rounded-lg shadow">
-          <h2 className="text-2xl font-semibold text-blue-700 mb-6 text-center">
+          <h2 className="text-2xl font-semibold text-[#424242] mb-6 text-center">
             Welcome Back
           </h2>
           <form className="space-y-6">
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-blue-700"
+                className="block text-sm font-medium text-[#424242]"
               >
                 Email
               </label>
@@ -36,7 +36,7 @@ export default function Login() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-blue-700"
+                className="block text-sm font-medium text-[#424242]"
               >
                 Password
               </label>
@@ -52,11 +52,11 @@ export default function Login() {
                 <input
                   id="remember"
                   type="checkbox"
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-[#FFA726] focus:ring-[#FFA726] border-gray-300 rounded"
                 />
                 <label
                   htmlFor="remember"
-                  className="ml-2 block text-sm text-blue-700"
+                  className="ml-2 block text-sm text-[#424242]"
                 >
                   Remember me
                 </label>
@@ -64,21 +64,21 @@ export default function Login() {
               <div className="text-sm">
                 <a
                   href="#"
-                  className="font-medium text-blue-600 hover:text-blue-500"
+                  className="font-medium text-[#FFA726] hover:text-[#FB8C00]"
                 >
                   Forgot your password?
                 </a>
               </div>
             </div>
-            <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+            <Button className="w-full bg-[#FFA726] hover:bg-[#FB8C00] text-white">
               Sign In
             </Button>
           </form>
-          <p className="mt-6 text-center text-sm text-blue-700">
+          <p className="mt-6 text-center text-sm text-[#424242]">
             Don't have an account?{" "}
             <a
               href="/signup"
-              className="font-medium text-blue-600 hover:text-blue-500"
+              className="font-medium text-[#FFA726] hover:text-[#FB8C00]"
             >
               Sign Up
             </a>
@@ -87,9 +87,9 @@ export default function Login() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white py-4 shadow-t">
-        <div className="container mx-auto text-center text-sm text-blue-700">
-          © 2025 Your Company. All rights reserved.
+      <footer className="bg-white py-4 border-t border-[#FFF9C4]">
+        <div className="container mx-auto text-center text-sm text-[#424242]">
+          © {new Date().getFullYear()} Your Company. All rights reserved.
         </div>
       </footer>
     </div>
