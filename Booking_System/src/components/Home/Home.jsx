@@ -56,7 +56,7 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-white flex flex-col">
       {/* Header */}
-      <header className="bg-orange-600 text-white py-6 shadow-md sticky top-0 z-50">
+      <header className="bg-orange-600 text-white py-6 shadow-md">
         <div className="max-w-screen-xl mx-auto px-4 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between text-center">
             <h1 className="text-3xl font-bold mb-3 md:mb-0">Booking System</h1>
@@ -164,5 +164,8 @@ const Home = () => {
     </div>
   );
 };
+
+
+
 
 export default Home;

@@ -5,8 +5,8 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="bg-white shadow-2xl sticky top-0 z-50 border-b border-yellow-300 rounded-b-lg">
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-500 ease-in-out">
+    <header className= "w-full bg-white shadow-2xl sticky top-0 z-50 border-b border-yellow-300 rounded-b-lg">
+      <nav className="w-full mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-500 ease-in-out">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link
@@ -57,7 +57,7 @@ export default function Header() {
                 Get Started
               </Link>
             </div>
-            {/* Mobile Menu Button */}
+            {/* Mobile Menu Button */}  
             <div className="lg:hidden">
               <button
                 onClick={() => setMenuOpen(!menuOpen)}

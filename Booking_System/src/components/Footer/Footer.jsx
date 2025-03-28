@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
-    <footer className="bg-white border-t border-yellow-300 pt-8 pb-4 rounded-t-lg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <footer className="bg-white w-full border-t border-yellow-300 pt-8 pb-4 rounded-t-lg">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top Section */}
         <div className="flex flex-col md:flex-row md:justify-between md:items-start">
           {/* Logo & Description */}
