@@ -324,16 +324,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* EXTENDED FOOTER */}
-      <footer className="bg-[#FFF9C4] py-8">
-        <div className="max-w-screen-xl mx-auto px-4 lg:px-8 text-center text-[#424242] text-lg">
-          &copy; {new Date().getFullYear()} Booking System. All rights reserved.
-          <br />
-          <span className="block mt-2">
-            Your gateway to a world of travel possibilities.
-          </span>
-        </div>
-      </footer>
+      <br />
     </div>
   );
 }

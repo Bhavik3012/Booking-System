@@ -165,10 +165,7 @@ export default function Trips() {
         </Button>
       </section>
 
-      {/* FOOTER */}
-      <footer className="bg-black text-orange-400 p-6 text-center">
-        <p>© 2025 Trips & Adventures. All rights reserved.</p>
-      </footer>
+      <br />
     </div>
   );
 }

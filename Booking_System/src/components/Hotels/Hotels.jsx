@@ -109,12 +109,7 @@ export default function Hotels() {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-white border-t border-[#FFF9C4] py-4 text-center">
-        <p className="text-[#424242]">
-          © {new Date().getFullYear()} Hotel Booking. All rights reserved.
-        </p>
-      </footer>
+      <br />
     </div>
   );
 }

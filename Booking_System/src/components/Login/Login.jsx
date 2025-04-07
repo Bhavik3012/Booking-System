@@ -86,12 +86,7 @@ export default function Login() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-white py-4 border-t border-[#FFF9C4]">
-        <div className="container mx-auto text-center text-sm text-[#424242]">
-          © {new Date().getFullYear()} Your Company. All rights reserved.
-        </div>
-      </footer>
+      <br />
     </div>
   );
 }

@@ -132,12 +132,7 @@ export default function Buses() {
         </Button>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-white border-t border-[#FFF9C4] p-6 text-center">
-        <p className="text-[#424242]">
-          © 2025 Bus Booking. All rights reserved.
-        </p>
-      </footer>
+      <br />
     </div>
   );
 }

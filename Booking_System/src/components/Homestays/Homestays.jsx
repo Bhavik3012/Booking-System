@@ -151,12 +151,7 @@ export default function Homestays() {
         </section>
       </main>
 
-      {/* FOOTER */}
-      <footer className="bg-[#FFF9C4] py-6">
-        <div className="max-w-screen-xl mx-auto px-4 lg:px-8 text-center text-[#424242] text-lg">
-          © {new Date().getFullYear()} Homestay Booking. All rights reserved.
-        </div>
-      </footer>
+      <br />
     </div>
   );
 }

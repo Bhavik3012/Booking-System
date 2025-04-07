@@ -111,12 +111,7 @@ export default function Train() {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-[#FFF9C4] py-6">
-        <div className="container mx-auto text-center text-[#424242] text-lg">
-          © {new Date().getFullYear()} Train Booking. All rights reserved.
-        </div>
-      </footer>
+      <br />
     </div>
   );
 }
