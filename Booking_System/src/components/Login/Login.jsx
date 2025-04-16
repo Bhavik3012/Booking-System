@@ -5,13 +5,6 @@ import { Button } from "../ui/Button";
 export default function Login() {
   return (
     <div className="min-h-screen bg-[#FFF3E0] flex flex-col">
-      {/* Header */}
-      <header className="w-full bg-white shadow py-4 border-b border-[#FFF9C4]">
-        <div className="container mx-auto px-4">
-          <h1 className="text-3xl text-[#424242] font-bold">Login</h1>
-        </div>
-      </header>
-
       {/* Main Content */}
       <main className="container mx-auto px-4 py-12 flex justify-center">
         <div className="w-full max-w-md bg-white p-8 rounded-lg shadow">
@@ -85,8 +78,6 @@ export default function Login() {
           </p>
         </div>
       </main>
-
-      <br />
     </div>
   );
 }
