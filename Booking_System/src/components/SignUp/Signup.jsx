@@ -42,11 +42,20 @@ export default function SignUpPage() {
 
     setLoading(true);
     try {
+      // 1️⃣ Ensure any existing session is cleared
+      try {
+        await authService.logout();
+      } catch {
+        // ignore if no session existed
+      }
+
+      // 2️⃣ Create new account + session + profile doc
       const fullName = `${firstName.trim()} ${lastName.trim()}`;
       await authService.createAccount({ email, password, name: fullName });
 
-      // ← On success, redirect to home
+      // 3️⃣ Navigate home and force a full reload
       navigate("/", { replace: true });
+      window.location.reload();
     } catch (err) {
       setError(err.message || "Signup failed. Please try again.");
     } finally {
@@ -86,7 +95,6 @@ export default function SignUpPage() {
                   className="mt-1 block w-full"
                 />
               </div>
-
               {/* Last Name */}
               <div>
                 <label
