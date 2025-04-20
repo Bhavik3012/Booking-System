@@ -1,12 +1,10 @@
+// src/main.jsx
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import {
-  Route,
-  RouterProvider,
-  createBrowserRouter,
-  createRoutesFromElements,
-} from "react-router";
+
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+
 import Layout from "./Layout";
 import {
   Home,
@@ -19,52 +17,54 @@ import {
   Trips,
   Login,
   SignUp,
+  PrivateRoute,
 } from "./components/index";
+
+import BookingHistory from "./pages/bookings/BookingHistory";
+import Checkout from "./pages/checkout/Checkout";
+import Profile from "./pages/profile/Profile";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
     children: [
+      // Public routes
+      { path: "", element: <Home /> },
+      { path: "about", element: <About /> },
+      { path: "flights", element: <Flights /> },
+      { path: "hotels", element: <Hotels /> },
+      { path: "trains", element: <Trains /> },
+      { path: "buses", element: <Buses /> },
+      { path: "homestays", element: <Homestays /> },
+      { path: "trips", element: <Trips /> },
+      { path: "login", element: <Login /> },
+      { path: "signup", element: <SignUp /> },
+
+      // Protected routes
       {
-        path: "",
-        element: <Home />,
+        path: "bookings",
+        element: (
+          <PrivateRoute>
+            <BookingHistory />
+          </PrivateRoute>
+        ),
       },
       {
-        path: "/about",
-        element: <About />,
+        path: "checkout",
+        element: (
+          <PrivateRoute>
+            <Checkout />
+          </PrivateRoute>
+        ),
       },
       {
-        path: "/flights",
-        element: <Flights />,
-      },
-      {
-        path: "/hotels",
-        element: <Hotels />,
-      },
-      {
-        path: "/trains",
-        element: <Trains />,
-      },
-      {
-        path: "/Buses",
-        element: <Buses />,
-      },
-      {
-        path: "/Homestays",
-        element: <Homestays />,
-      },
-      {
-        path: "/Trips",
-        element: <Trips />,
-      },
-      {
-        path: "/Login",
-        element: <Login />,
-      },
-      {
-        path: "/SignUp",
-        element: <SignUp />,
+        path: "profile",
+        element: (
+          <PrivateRoute>
+            <Profile />
+          </PrivateRoute>
+        ),
       },
     ],
   },

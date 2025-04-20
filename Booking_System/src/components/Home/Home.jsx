@@ -1,7 +1,11 @@
+// src/components/Home/Home.jsx
 import React, { useState, useEffect } from "react";
+import authService from "../../services/authService";
 
 export default function Home() {
-  // Testimonials for slider
+  const [user, setUser] = useState(null);
+  const [checking, setChecking] = useState(true);
+
   const testimonials = [
     {
       quote:
@@ -19,21 +23,33 @@ export default function Home() {
       author: "Sophia Lee",
     },
   ];
-
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const totalTestimonials = testimonials.length;
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentTestimonial((prevIndex) => (prevIndex + 1) % totalTestimonials);
+      setCurrentTestimonial((i) => (i + 1) % totalTestimonials);
     }, 5000);
     return () => clearInterval(timer);
   }, [totalTestimonials]);
+
+  useEffect(() => {
+    authService
+      .getCurrentUser()
+      .then((u) => setUser(u))
+      .catch(() => setUser(null))
+      .finally(() => setChecking(false));
+  }, []);
+
+  if (checking) {
+    return <div className="text-center py-20">Loading…</div>;
+  }
 
   return (
     <div className="min-h-screen bg-[#FFF3E0] flex flex-col">
       {/* HERO SECTION */}
       <section className="relative">
+        {/* restore the background image */}
         <div
           className="bg-cover bg-center h-[600px]"
           style={{
@@ -41,19 +57,43 @@ export default function Home() {
               "url('https://images.pexels.com/photos/373912/pexels-photo-373912.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=1600')",
           }}
         ></div>
+
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <div className="bg-white bg-opacity-90 p-8 md:p-12 rounded-xl shadow-xl text-center max-w-2xl mx-4">
             <h1 className="text-4xl md:text-6xl font-bold text-[#FB8C00]">
-              Discover Your Next Adventure
+              {user
+                ? `Welcome back, ${user.name || user.email}!`
+                : "Discover Your Next Adventure"}
             </h1>
             <p className="mt-4 text-xl md:text-2xl text-[#424242]">
-              Explore a world of exclusive travel deals for flights, trains,
-              hotels, buses, homestays, and more – all seamlessly booked in one
-              place.
+              {user
+                ? "What would you like to book today?"
+                : "Explore a world of exclusive travel deals for flights, trains, hotels, buses, homestays, and more – all seamlessly booked in one place."}
             </p>
-            <button className="mt-6 px-8 py-4 bg-[#FFA726] hover:bg-[#FB8C00] text-white text-lg font-semibold rounded-full transition duration-300">
-              Get Started
-            </button>
+
+            {user ? (
+              <div className="mt-6 flex gap-4 justify-center">
+                <button
+                  onClick={() => (window.location.href = "/trains")}
+                  className="px-6 py-3 bg-[#FFA726] hover:bg-[#FB8C00] text-white rounded-full transition"
+                >
+                  Book Now
+                </button>
+                <button
+                  onClick={() => (window.location.href = "/bookings")}
+                  className="px-6 py-3 bg-white text-[#FFA726] rounded-full shadow transition hover:bg-[#FFF9C4]"
+                >
+                  My Bookings
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => (window.location.href = "/signup")}
+                className="mt-6 px-8 py-4 bg-[#FFA726] hover:bg-[#FB8C00] text-white text-lg font-semibold rounded-full transition duration-300"
+              >
+                Get Started
+              </button>
+            )}
           </div>
         </div>
       </section>
@@ -163,7 +203,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* TESTIMONIALS SECTION */}
+      {/* TESTIMONIALS SECTION (unchanged) */}
       <section className="py-20">
         <div className="max-w-screen-xl mx-auto px-4 lg:px-8 text-center">
           <h2 className="text-4xl md:text-5xl font-bold text-[#424242] mb-10">
@@ -318,9 +358,23 @@ export default function Home() {
             Join thousands of satisfied travelers who have unlocked exclusive
             deals and unforgettable experiences with our booking system.
           </p>
-          <button className="px-10 py-5 bg-white text-[#FB8C00] font-bold text-2xl rounded-full shadow-xl hover:bg-[#FFF9C4] transition duration-300">
-            Get Started
-          </button>
+          {user ? (
+            <div className="mt-6 flex gap-4 justify-center">
+              <button
+                onClick={() => (window.location.href = "/trains")}
+                className="mt-6 px-8 py-4 bg-[#FFA726] hover:bg-[#FB8C00] text-white text-lg font-semibold rounded-full transition duration-300"
+              >
+                Book Now
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => (window.location.href = "/signup")}
+              className="mt-6 px-8 py-4 bg-[#FFA726] hover:bg-[#FB8C00] text-white text-lg font-semibold rounded-full transition duration-300"
+            >
+              Get Started
+            </button>
+          )}
         </div>
       </section>
 

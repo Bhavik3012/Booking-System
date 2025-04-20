@@ -11,6 +11,7 @@ import Homestays from "./Homestays/Homestays";
 import Buses from "./Buses/Buses";
 import Login from "./Login/Login";
 import SignUp from "./SignUp/Signup";
+import PrivateRoute from "./PrivateRoute";
 
 export {
   Home,
@@ -26,4 +27,5 @@ export {
   HomeCard,
   Login,
   SignUp,
+  PrivateRoute,
 };
