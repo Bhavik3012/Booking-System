@@ -1,3 +1,4 @@
+// src/components/Footer/Footer.jsx
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -11,12 +12,12 @@ export default function Footer() {
           <div className="mb-8 md:mb-0 md:w-1/3">
             <Link to="/" className="flex items-center">
               <img
-                src="https://alexharkness.com/wp-content/uploads/2020/06/logo-2.png"
+                src="https://www.cdnlogo.com/logos/b/94/booking-com.svg"
                 className="mr-3 h-16"
                 alt="Logo"
               />
               <span className="self-center text-2xl font-semibold whitespace-nowrap text-[#FB8C00]">
-                Booking System
+                
               </span>
             </Link>
             <p className="mt-4 text-[#424242]">
@@ -27,27 +28,137 @@ export default function Footer() {
 
           {/* Links Section */}
           <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-4 md:w-2/3">
-            {[
-              { title: "Company", links: ["Home", "About Us", "Careers", "Blog"] },
-              { title: "Services", links: ["Trains", "Flights", "Hotels", "Packages"] },
-              { title: "Support", links: ["Contact Us", "FAQ", "Terms & Conditions", "Privacy Policy"] },
-              { title: "Follow Us", links: ["GitHub", "Discord", "Twitter", "Dribbble"] },
-            ].map((section, index) => (
-              <div key={index}>
-                <h2 className="mb-6 text-sm font-semibold text-[#424242] uppercase">
-                  {section.title}
-                </h2>
-                <ul className="text-[#424242] font-medium">
-                  {section.links.map((link, idx) => (
-                    <li key={idx} className="mb-4">
-                      <Link to="#" className="hover:text-[#FB8C00]">
-                        {link}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+            <div>
+              <h2 className="mb-6 text-sm font-semibold text-[#424242] uppercase">
+                Company
+              </h2>
+              <ul className="text-[#424242] font-medium">
+                <li className="mb-4">
+                  <Link to="/" className="hover:text-[#FB8C00]">
+                    Home
+                  </Link>
+                </li>
+                <li className="mb-4">
+                  <Link to="/about" className="hover:text-[#FB8C00]">
+                    About Us
+                  </Link>
+                </li>
+                <li className="mb-4">
+                  <Link to="/careers" className="hover:text-[#FB8C00]">
+                    Careers
+                  </Link>
+                </li>
+                <li className="mb-4">
+                  <Link to="/blog" className="hover:text-[#FB8C00]">
+                    Blog
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h2 className="mb-6 text-sm font-semibold text-[#424242] uppercase">
+                Services
+              </h2>
+              <ul className="text-[#424242] font-medium">
+                <li className="mb-4">
+                  <Link to="/trains" className="hover:text-[#FB8C00]">
+                    Trains
+                  </Link>
+                </li>
+                <li className="mb-4">
+                  <Link to="/flights" className="hover:text-[#FB8C00]">
+                    Flights
+                  </Link>
+                </li>
+                <li className="mb-4">
+                  <Link to="/hotels" className="hover:text-[#FB8C00]">
+                    Hotels
+                  </Link>
+                </li>
+                <li className="mb-4">
+                  <Link to="/trips" className="hover:text-[#FB8C00]">
+                    Packages
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h2 className="mb-6 text-sm font-semibold text-[#424242] uppercase">
+                Support
+              </h2>
+              <ul className="text-[#424242] font-medium">
+                <li className="mb-4">
+                  <Link to="/about" className="hover:text-[#FB8C00]">
+                    Contact Us
+                  </Link>
+                </li>
+                <li className="mb-4">
+                  <Link to="/faq" className="hover:text-[#FB8C00]">
+                    FAQ
+                  </Link>
+                </li>
+                <li className="mb-4">
+                  <Link to="/terms" className="hover:text-[#FB8C00]">
+                    Terms & Conditions
+                  </Link>
+                </li>
+                <li className="mb-4">
+                  <Link to="/privacy" className="hover:text-[#FB8C00]">
+                    Privacy Policy
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h2 className="mb-6 text-sm font-semibold text-[#424242] uppercase">
+                Follow Us
+              </h2>
+              <ul className="text-[#424242] font-medium">
+                <li className="mb-4">
+                  <a
+                    href="https://github.com/Bhavik3012"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-[#FB8C00]"
+                  >
+                    GitHub
+                  </a>
+                </li>
+                <li className="mb-4">
+                  <a
+                    href="https://discord.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-[#FB8C00]"
+                  >
+                    Discord
+                  </a>
+                </li>
+                <li className="mb-4">
+                  <a
+                    href="https://twitter.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-[#FB8C00]"
+                  >
+                    Twitter
+                  </a>
+                </li>
+                <li className="mb-4">
+                  <a
+                    href="https://dribbble.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-[#FB8C00]"
+                  >
+                    Dribbble
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
 
@@ -56,23 +167,8 @@ export default function Footer() {
         {/* Bottom Section */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <span className="text-sm text-[#424242] sm:text-center">
-            © 2025
-            <a href="https://github.com/Bhavik3012" className="hover:text-[#FB8C00] ml-1">
-              bhaviksongara
-            </a>
-            . All Rights Reserved.
+            © {new Date().getFullYear()} Booking System. All Rights Reserved.
           </span>
-          <div className="flex mt-4 space-x-6 sm:justify-center sm:mt-0">
-            {["Facebook", "Instagram", "LinkedIn"].map((platform, index) => (
-              <Link key={index} to="#" className="text-[#424242] hover:text-[#FB8C00]">
-                <span className="sr-only">{platform}</span>
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                  {/* Placeholder Path */}
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
-                </svg>
-              </Link>
-            ))}
-          </div>
         </div>
       </div>
     </footer>

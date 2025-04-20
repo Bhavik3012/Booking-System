@@ -29,7 +29,7 @@ export default function Home() {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTestimonial((i) => (i + 1) % totalTestimonials);
-    }, 5000);
+    }, 1500);
     return () => clearInterval(timer);
   }, [totalTestimonials]);
 

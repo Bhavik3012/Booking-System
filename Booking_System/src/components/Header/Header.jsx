@@ -41,7 +41,7 @@ export default function Header() {
             className="flex-shrink-0 flex items-center transform transition hover:scale-105"
           >
             <img
-              src="https://alexharkness.com/wp-content/uploads/2020/06/logo-2.png"
+              src="https://www.cdnlogo.com/logos/b/94/booking-com.svg"
               alt="Logo"
               className="h-8 w-auto"
             />

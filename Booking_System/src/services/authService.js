@@ -4,8 +4,8 @@ import { Client, Account, Databases, ID, Permission, Role } from "appwrite";
 class AuthService {
   constructor() {
     this.client = new Client()
-      .setEndpoint(conf.appwriteUrl) // e.g. "https://cloud.appwrite.io/v1"
-      .setProject(conf.appwriteProjectId); // your project ID
+      .setEndpoint(conf.appwriteUrl)
+      .setProject(conf.appwriteProjectId);
 
     this.account = new Account(this.client);
     this.db = new Databases(this.client);
@@ -34,8 +34,8 @@ class AuthService {
 
       // 3️⃣ Write a profile document using user's ID as document ID
       await this.db.createDocument(
-        conf.appwriteDatabaseId, // e.g. "travel_db"
-        conf.appwriteCollectionId, // e.g. "users"
+        conf.appwriteDatabaseId, // your database ID
+        conf.appwriteCollectionIdUser, // updated: users collection ID
         userAccount.$id, // document ID = user.$id
         {
           name,
@@ -43,7 +43,6 @@ class AuthService {
           createdAt: new Date().toISOString(),
         },
         [
-          // only the user themself can read/update this doc
           Permission.read(Role.user(userAccount.$id)),
           Permission.update(Role.user(userAccount.$id)),
         ]
@@ -71,20 +70,17 @@ class AuthService {
    */
   async getCurrentUser() {
     try {
-      // fetch basic account info
       const account = await this.account.get();
-      // attempt to fetch profile by the same ID
       let profile = {};
       try {
         profile = await this.db.getDocument(
           conf.appwriteDatabaseId,
-          conf.appwriteCollectionId,
+          conf.appwriteCollectionIdUser,
           account.$id
         );
       } catch {
         // no profile found, ignore
       }
-      // merge account and profile fields
       return { ...account, ...profile };
     } catch (error) {
       console.warn("AuthService.getCurrentUser error:", error.message);
