@@ -1,6 +1,6 @@
 // src/services/bookingsService.js
 import conf from "../conf/conf.js";
-import { Client, Databases, Query } from "appwrite";
+import { Client, Databases, ID, Permission, Role, Query } from "appwrite";
 
 const client = new Client()
   .setEndpoint(conf.appwriteUrl)
@@ -14,7 +14,7 @@ export default {
       .listDocuments(
         conf.appwriteDatabaseId,
         conf.appwriteCollectionIdBookings,
-        [ Query.equal("userId", userId) ]
+        [Query.equal("userId", userId)]
       )
       .then((res) => res.documents),
 
@@ -24,4 +24,36 @@ export default {
       conf.appwriteCollectionIdBookings,
       bookingId
     ),
+
+  /**
+   * General booking creator for any service type
+   */
+  createBooking: ({
+    userId,
+    serviceType,
+    serviceId,
+    date,
+    seatNumber = null,
+    roomId = null,
+    amount,
+    status = "confirmed",
+  }) => {
+    return db.createDocument(
+      conf.appwriteDatabaseId,
+      conf.appwriteCollectionIdBookings,
+      ID.unique(),
+      {
+        userId,
+        serviceType,
+        serviceId,
+        date,
+        seatNumber,
+        roomId,
+        amount,
+        status,
+        bookedAt: new Date().toISOString(),
+      },
+      [Permission.read(Role.user(userId)), Permission.update(Role.user(userId))]
+    );
+  },
 };

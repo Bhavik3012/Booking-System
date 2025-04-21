@@ -32,7 +32,7 @@ class AuthService {
       conf.appwriteDatabaseId,
       conf.appwriteCollectionIdUser,
       userAccount.$id,
-      { name, email, createdAt: new Date().toISOString() },
+      { name, email },
       [
         Permission.read(Role.user(userAccount.$id)),
         Permission.update(Role.user(userAccount.$id)),

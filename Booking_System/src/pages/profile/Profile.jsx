@@ -1,10 +1,12 @@
 // src/pages/profile/Profile.jsx
 import React, { useState, useEffect } from "react";
 import authService from "../../services/authService";
+import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     authService
@@ -13,6 +15,15 @@ export default function Profile() {
       .catch(() => setUser(null))
       .finally(() => setLoading(false));
   }, []);
+
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+      navigate("/login");
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
+  };
 
   if (loading) {
     return <div className="text-center py-20">Loading profile…</div>;
@@ -32,7 +43,7 @@ export default function Profile() {
         <h2 className="text-2xl font-semibold text-[#424242] mb-6 text-center">
           My Profile
         </h2>
-        <div className="space-y-4 text-[#424242]">
+        <div className="space-y-4 text-[#424242] mb-6">
           <div>
             <span className="font-medium">Name: </span>
             {user.name}
@@ -48,6 +59,12 @@ export default function Profile() {
             </div>
           )}
         </div>
+        <button
+          onClick={handleLogout}
+          className="w-full bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded transition duration-200"
+        >
+          Logout
+        </button>
       </div>
     </div>
   );
