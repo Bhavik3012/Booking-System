@@ -1,10 +1,74 @@
-import React from "react";
+// src/components/Buses/Buses.jsx
+import React, { useState, useEffect } from "react";
 import { Input } from "../ui/Input";
 import { Button } from "../ui/Button";
 import { Card, CardContent } from "../ui/Card";
 import { Select, SelectItem } from "../ui/Select";
 
+import { databases } from "../../lib/appwrite";
+import authService from "../../services/authService";
+import { Query } from "appwrite";
+
+// Use Vite env variables
+const {
+  VITE_APPWRITE_DATABASE_ID: DB_ID,
+  VITE_APPWRITE_COLLECTION_ID_BUSES: BUSES_COLL,
+} = import.meta.env;
+
 export default function Buses() {
+  // form state
+  const [filters, setFilters] = useState({
+    from: "",
+    to: "",
+    date: "",
+    type: "",
+  });
+  const [results, setResults] = useState([]);
+  const [user, setUser] = useState(null);
+
+  // check current user on mount
+  useEffect(() => {
+    authService
+      .getCurrentUser()
+      .then(setUser)
+      .catch(() => setUser(null));
+  }, []);
+
+  // initial fetch
+  useEffect(() => {
+    fetchBuses();
+  }, []);
+
+  // fetch buses with optional filters
+  const fetchBuses = async (queryFilters = {}) => {
+    try {
+      const queries = [];
+      Object.entries(queryFilters).forEach(([key, value]) => {
+        if (value) queries.push(Query.equal(key, value));
+      });
+      const res = await databases.listDocuments(DB_ID, BUSES_COLL, queries);
+      setResults(res.documents);
+    } catch (err) {
+      console.error("Error fetching buses:", err);
+    }
+  };
+
+  const handleSearch = () => fetchBuses(filters);
+
+  const handleBookNow = async (bus) => {
+    const current = await authService.getCurrentUser().catch(() => null);
+    if (!current) {
+      alert("Please log in to book a bus.");
+      window.location.href = "/login";
+      return;
+    }
+    // Navigate to checkout or create booking
+    window.location.href = `/checkout?busId=${bus.$id}`;
+  };
+
+  const onChange = (e) =>
+    setFilters({ ...filters, [e.target.name]: e.target.value });
+
   return (
     <div className="min-h-screen bg-[#FFF3E0]">
       {/* Hero Section */}
@@ -15,8 +79,7 @@ export default function Buses() {
             backgroundImage:
               "url('https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80')",
           }}
-        ></div>
-        {/* Use a contrasting text container without reducing the image opacity */}
+        />
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="bg-white bg-opacity-90 p-6 rounded-lg shadow-lg text-center">
             <h2 className="text-3xl md:text-5xl font-bold text-[#FB8C00]">
@@ -32,107 +95,86 @@ export default function Buses() {
           <h3 className="text-2xl font-bold text-[#424242] mb-6">
             Find Your Bus
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <Input
+              name="from"
+              value={filters.from}
+              onChange={onChange}
               placeholder="From City/Stop"
               className="border-[#FFA726] focus:ring-[#FFA726]"
             />
             <Input
+              name="to"
+              value={filters.to}
+              onChange={onChange}
               placeholder="To City/Stop"
               className="border-[#FFA726] focus:ring-[#FFA726]"
             />
             <Input
+              name="date"
               type="date"
-              placeholder="Travel Date"
+              value={filters.date}
+              onChange={onChange}
               className="border-[#FFA726] focus:ring-[#FFA726]"
             />
             <Select
-              defaultValue="AC"
+              name="type"
+              value={filters.type}
+              onChange={(value) => setFilters((f) => ({ ...f, type: value }))}
               className="border-[#FFA726] bg-white focus:ring-[#FFA726]"
             >
+              <SelectItem value="">All Types</SelectItem>
               <SelectItem value="AC">AC</SelectItem>
               <SelectItem value="NonAC">Non AC</SelectItem>
               <SelectItem value="Sleeper">Sleeper</SelectItem>
             </Select>
           </div>
-          <Button className="mt-6 w-full bg-[#FFA726] hover:bg-[#FB8C00] text-white">
+          <Button
+            onClick={handleSearch}
+            className="mt-6 w-full bg-[#FFA726] hover:bg-[#FB8C00] text-white"
+          >
             Search Buses
           </Button>
         </div>
       </section>
 
-      {/* Popular Routes Section */}
+      {/* Results Section */}
       <section className="container mx-auto p-8">
-        <h3 className="text-2xl font-bold text-[#424242] mb-6">
-          Popular Bus Routes
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <Card className="border border-[#FFA726] hover:shadow-2xl transition duration-300">
-            <CardContent className="p-4">
-              <h4 className="font-bold text-lg text-[#424242]">
-                Mumbai - Pune
-              </h4>
-              <p className="text-gray-700 mt-2">
-                Multiple departures daily with comfortable seating.
-              </p>
-              <Button className="mt-4 bg-[#FFA726] hover:bg-[#FB8C00] text-white w-full">
-                Book Now
-              </Button>
-            </CardContent>
-          </Card>
-          <Card className="border border-[#FFA726] hover:shadow-2xl transition duration-300">
-            <CardContent className="p-4">
-              <h4 className="font-bold text-lg text-[#424242]">Delhi - Agra</h4>
-              <p className="text-gray-700 mt-2">
-                Quick and affordable services available.
-              </p>
-              <Button className="mt-4 bg-[#FFA726] hover:bg-[#FB8C00] text-white w-full">
-                Book Now
-              </Button>
-            </CardContent>
-          </Card>
-          <Card className="border border-[#FFA726] hover:shadow-2xl transition duration-300">
-            <CardContent className="p-4">
-              <h4 className="font-bold text-lg text-[#424242]">
-                Bangalore - Mysore
-              </h4>
-              <p className="text-gray-700 mt-2">
-                Frequent and punctual services.
-              </p>
-              <Button className="mt-4 bg-[#FFA726] hover:bg-[#FB8C00] text-white w-full">
-                Book Now
-              </Button>
-            </CardContent>
-          </Card>
-          <Card className="border border-[#FFA726] hover:shadow-2xl transition duration-300">
-            <CardContent className="p-4">
-              <h4 className="font-bold text-lg text-[#424242]">
-                Chennai - Coimbatore
-              </h4>
-              <p className="text-gray-700 mt-2">
-                Comfortable journeys with top-notch services.
-              </p>
-              <Button className="mt-4 bg-[#FFA726] hover:bg-[#FB8C00] text-white w-full">
-                Book Now
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
+        {results.length === 0 ? (
+          <p className="text-center text-xl text-[#424242]">No buses found.</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {results.map((bus) => (
+              <Card
+                key={bus.$id}
+                className="border border-[#FFA726] hover:shadow-2xl transition duration-300"
+              >
+                <img
+                  src={bus.Image}
+                  alt={`${bus.from} to ${bus.to}`}
+                  className="w-full h-40 object-cover rounded-t-lg"
+                />
+                <CardContent className="p-4">
+                  <h4 className="font-bold text-lg text-[#424242]">
+                    {bus.from} — {bus.to}
+                  </h4>
+                  <p className="mt-2 text-[#424242]">Date: {bus.date}</p>
+                  <p className="text-[#424242]">Type: {bus.type}</p>
+                  <p className="text-sm text-[#757575] mt-1">
+                    {bus.description}
+                  </p>
+                  <Button
+                    onClick={() => handleBookNow(bus)}
+                    className="mt-4 w-full bg-[#FFA726] hover:bg-[#FB8C00] text-white"
+                  >
+                    Book Now
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
       </section>
-
-      {/* Special Offers Section */}
-      <section className="bg-[#FB8C00] text-white p-8 rounded-lg container mx-auto mb-8">
-        <h3 className="text-2xl font-bold">Exclusive Bus Offers</h3>
-        <p className="mt-4 text-lg">
-          Avail exciting discounts and deals on bus tickets. Enjoy hassle-free
-          journeys at unbeatable prices.
-        </p>
-        <Button className="mt-6 bg-white hover:bg-[#FFF9C4] text-[#FB8C00]">
-          View Offers
-        </Button>
-      </section>
-
-      <br />
     </div>
   );
 }

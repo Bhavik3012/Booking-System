@@ -1,3 +1,4 @@
+// src/services/authService.js
 import conf from "../conf/conf.js";
 import { Client, Account, Databases, ID, Permission, Role } from "appwrite";
 
@@ -17,57 +18,35 @@ class AuthService {
    * 3️⃣ Insert profile doc keyed by userId
    */
   async createAccount({ email, password, name }) {
-    try {
-      // 1️⃣ Create the user account, returns user object including $id
-      const userAccount = await this.account.create(
-        ID.unique(),
-        email,
-        password,
-        name
-      );
-
-      // 2️⃣ Log them in, returns session
-      const session = await this.account.createEmailPasswordSession(
-        email,
-        password
-      );
-
-      // 3️⃣ Write a profile document using user's ID as document ID
-      await this.db.createDocument(
-        conf.appwriteDatabaseId, // your database ID
-        conf.appwriteCollectionIdUser, // updated: users collection ID
-        userAccount.$id, // document ID = user.$id
-        {
-          name,
-          email,
-          createdAt: new Date().toISOString(),
-        },
-        [
-          Permission.read(Role.user(userAccount.$id)),
-          Permission.update(Role.user(userAccount.$id)),
-        ]
-      );
-
-      return session;
-    } catch (error) {
-      throw error;
-    }
+    const userAccount = await this.account.create(
+      ID.unique(),
+      email,
+      password,
+      name
+    );
+    const session = await this.account.createEmailPasswordSession(
+      email,
+      password
+    );
+    await this.db.createDocument(
+      conf.appwriteDatabaseId,
+      conf.appwriteCollectionIdUser,
+      userAccount.$id,
+      { name, email, createdAt: new Date().toISOString() },
+      [
+        Permission.read(Role.user(userAccount.$id)),
+        Permission.update(Role.user(userAccount.$id)),
+      ]
+    );
+    return session;
   }
 
-  /**
-   * Standard email/password login
-   */
+  /** Standard email/password login */
   async login({ email, password }) {
-    try {
-      return await this.account.createEmailPasswordSession(email, password);
-    } catch (error) {
-      throw error;
-    }
+    return this.account.createEmailPasswordSession(email, password);
   }
 
-  /**
-   * Returns merged account + profile or null
-   */
+  /** Returns merged account + profile or null */
   async getCurrentUser() {
     try {
       const account = await this.account.get();
@@ -78,27 +57,27 @@ class AuthService {
           conf.appwriteCollectionIdUser,
           account.$id
         );
-      } catch {
-        // no profile found, ignore
-      }
+      } catch {}
       return { ...account, ...profile };
-    } catch (error) {
-      console.warn("AuthService.getCurrentUser error:", error.message);
+    } catch {
       return null;
     }
   }
 
-  /**
-   * Logs out the user by deleting all sessions
-   */
-  async logout() {
+  /** Convenience: true if there’s an active session */
+  async isAuthenticated() {
     try {
-      await this.account.deleteSessions();
-    } catch (error) {
-      console.warn("AuthService.logout error:", error.message);
+      await this.account.get();
+      return true;
+    } catch {
+      return false;
     }
+  }
+
+  /** Logs out the user by deleting all sessions */
+  async logout() {
+    await this.account.deleteSessions();
   }
 }
 
-const authService = new AuthService();
-export default authService;
+export default new AuthService();
