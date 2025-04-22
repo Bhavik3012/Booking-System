@@ -35,3 +35,43 @@ export function getBus(busId) {
     busId
   );
 }
+
+/**
+ * Update available seats for a bus
+ * @param {string} busId
+ * @param {number} seatsToBook
+ * @returns {Promise<Object>}
+ */
+export function updateSeats(busId, seatsToBook) {
+  return db.getDocument(
+    conf.appwriteDatabaseId,
+    conf.appwriteCollectionIdBuses,
+    busId
+  ).then((bus) => {
+    const currentSeats = bus.availableSeats || 0;
+    if (currentSeats < seatsToBook) {
+      throw new Error('Not enough seats available');
+    }
+    return db.updateDocument(
+      conf.appwriteDatabaseId,
+      conf.appwriteCollectionIdBuses,
+      busId,
+      {
+        availableSeats: currentSeats - seatsToBook
+      }
+    );
+  });
+}
+
+/**
+ * Get available seats for a bus
+ * @param {string} busId
+ * @returns {Promise<number>}
+ */
+export function getAvailableSeats(busId) {
+  return db.getDocument(
+    conf.appwriteDatabaseId,
+    conf.appwriteCollectionIdBuses,
+    busId
+  ).then((bus) => bus.availableSeats || 0);
+}

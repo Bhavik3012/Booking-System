@@ -1,7 +1,7 @@
 // src/pages/bookings/BookingHistory.jsx
 import React, { useState, useEffect } from "react";
 import authService from "../../services/authService";
-import bookingsService from "../../services/bookingsService"; // create this to wrap Appwrite DB calls
+import { getUserBookings } from "../../services/bookingsService";
 import { Link } from "react-router-dom";
 
 export default function BookingHistory() {
@@ -15,7 +15,7 @@ export default function BookingHistory() {
       .then((u) => {
         if (!u) throw new Error("Not logged in");
         userId = u.$id;
-        return bookingsService.getUserBookings(userId);
+        return getUserBookings(userId);
       })
       .then((list) => setBookings(list))
       .catch(() => setBookings([]))

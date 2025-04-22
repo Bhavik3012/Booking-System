@@ -8,52 +8,75 @@ const client = new Client()
 
 const db = new Databases(client);
 
-export default {
-  getUserBookings: (userId) =>
-    db
-      .listDocuments(
-        conf.appwriteDatabaseId,
-        conf.appwriteCollectionIdBookings,
-        [Query.equal("userId", userId)]
-      )
-      .then((res) => res.documents),
+/**
+ * Create a new booking
+ * @param {Object} bookingData - Booking details
+ * @returns {Promise<Object>}
+ */
+export function createBooking(bookingData) {
+  return db.createDocument(
+    conf.appwriteDatabaseId,
+    conf.appwriteCollectionIdBookings,
+    ID.unique(),
+    {
+      ...bookingData,
+      status: 'confirmed',
+      bookingDate: new Date().toISOString()
+    }
+  );
+}
 
-  getBooking: (bookingId) =>
-    db.getDocument(
-      conf.appwriteDatabaseId,
-      conf.appwriteCollectionIdBookings,
-      bookingId
-    ),
+/**
+ * Get all bookings for a user
+ * @param {string} userId
+ * @returns {Promise<Array>}
+ */
+export function getUserBookings(userId) {
+  return db.listDocuments(
+    conf.appwriteDatabaseId,
+    conf.appwriteCollectionIdBookings,
+    [
+      Query.equal('userId', userId)
+    ]
+  ).then(res => res.documents);
+}
 
-  /**
-   * General booking creator for any service type
-   */
-  createBooking: ({
-    userId,
-    serviceType,
-    serviceId,
-    date,
-    seatNumber = null,
-    roomId = null,
-    amount,
-    status = "confirmed",
-  }) => {
-    return db.createDocument(
-      conf.appwriteDatabaseId,
-      conf.appwriteCollectionIdBookings,
-      ID.unique(),
-      {
-        userId,
-        serviceType,
-        serviceId,
-        date,
-        seatNumber,
-        roomId,
-        amount,
-        status,
-        bookedAt: new Date().toISOString(),
-      },
-      [Permission.read(Role.user(userId)), Permission.update(Role.user(userId))]
-    );
-  },
-};
+/**
+ * Get all bookings (admin only)
+ * @returns {Promise<Array>}
+ */
+export function getAllBookings() {
+  return db.listDocuments(
+    conf.appwriteDatabaseId,
+    conf.appwriteCollectionIdBookings
+  ).then(res => res.documents);
+}
+
+/**
+ * Get booking by ID
+ * @param {string} bookingId
+ * @returns {Promise<Object>}
+ */
+export function getBooking(bookingId) {
+  return db.getDocument(
+    conf.appwriteDatabaseId,
+    conf.appwriteCollectionIdBookings,
+    bookingId
+  );
+}
+
+/**
+ * Cancel a booking
+ * @param {string} bookingId
+ * @returns {Promise<Object>}
+ */
+export function cancelBooking(bookingId) {
+  return db.updateDocument(
+    conf.appwriteDatabaseId,
+    conf.appwriteCollectionIdBookings,
+    bookingId,
+    {
+      status: 'cancelled'
+    }
+  );
+}

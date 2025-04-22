@@ -205,6 +205,12 @@ export default function Buses() {
                     <p className="text-[#424242]">
                       <span className="font-medium">Type:</span> {bus.type}
                     </p>
+                    <p className="text-[#424242]">
+                      <span className="font-medium">Available Seats:</span> {bus.availableSeats || 0}
+                    </p>
+                    <p className="text-[#424242]">
+                      <span className="font-medium">Price:</span> ${bus.price || 0}
+                    </p>
                     <p className="text-sm text-[#757575] mt-1">
                       {bus.description}
                     </p>
