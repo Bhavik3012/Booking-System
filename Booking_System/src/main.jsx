@@ -23,6 +23,8 @@ import {
 import BookingHistory from "./pages/bookings/BookingHistory";
 import Checkout from "./pages/checkout/Checkout";
 import Profile from "./pages/profile/Profile";
+import CreateAdmin from "./components/Admin/CreateAdmin";
+import AdminRoute from "./components/AdminRoute";
 
 const router = createBrowserRouter([
   {
@@ -64,6 +66,16 @@ const router = createBrowserRouter([
           <PrivateRoute>
             <Profile />
           </PrivateRoute>
+        ),
+      },
+
+      // Admin routes
+      {
+        path: "admin/create-admin",
+        element: (
+          <AdminRoute>
+            <CreateAdmin />
+          </AdminRoute>
         ),
       },
     ],

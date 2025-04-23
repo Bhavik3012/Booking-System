@@ -7,23 +7,59 @@ import { Link } from "react-router-dom";
 export default function BookingHistory() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    let isMounted = true;
     let userId;
-    authService
-      .getCurrentUser()
-      .then((u) => {
-        if (!u) throw new Error("Not logged in");
-        userId = u.$id;
-        return getUserBookings(userId);
-      })
-      .then((list) => setBookings(list))
-      .catch(() => setBookings([]))
-      .finally(() => setLoading(false));
+
+    const fetchBookings = async () => {
+      try {
+        const user = await authService.getCurrentUser();
+        if (!user) throw new Error("Not logged in");
+        userId = user.$id;
+        const list = await getUserBookings(userId);
+        if (isMounted) {
+          setBookings(list);
+          setError(null);
+        }
+      } catch (err) {
+        if (isMounted) {
+          setBookings([]);
+          setError(err.message || "Failed to load bookings");
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchBookings();
+
+    // Cleanup function
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   if (loading) {
     return <div className="text-center py-20">Loading bookings…</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-[#FFF3E0] p-6">
+        <div className="max-w-3xl mx-auto bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+          <p className="text-center">{error}</p>
+          <p className="text-center mt-2">
+            <Link to="/" className="text-[#FFA726] underline">
+              Return to Home
+            </Link>
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (

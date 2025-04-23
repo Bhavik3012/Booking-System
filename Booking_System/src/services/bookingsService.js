@@ -3,42 +3,80 @@ import conf from "../conf/conf.js";
 import { Client, Databases, ID, Permission, Role, Query } from "appwrite";
 
 const client = new Client()
-  .setEndpoint(conf.appwriteUrl)
+  .setEndpoint('https://fra.cloud.appwrite.io/v1')
   .setProject(conf.appwriteProjectId);
 
 const db = new Databases(client);
 
 /**
- * Create a new booking
+ * Create a new booking (requires authentication)
  * @param {Object} bookingData - Booking details
  * @returns {Promise<Object>}
  */
-export function createBooking(bookingData) {
-  return db.createDocument(
-    conf.appwriteDatabaseId,
-    conf.appwriteCollectionIdBookings,
-    ID.unique(),
-    {
-      ...bookingData,
+export async function createBooking(bookingData) {
+  try {
+    if (!bookingData.userId) {
+      throw new Error('User must be logged in to create a booking');
+    }
+
+    const permissions = [
+      Permission.read(Role.user(bookingData.userId)),
+      Permission.update(Role.user(bookingData.userId)),
+      Permission.delete(Role.user(bookingData.userId))
+    ];
+
+    // Create the booking document with correct attribute names
+    const bookingDocument = {
+      userId: bookingData.userId,  // Changed from userid to userId
+      busId: bookingData.busId,
+      from: bookingData.from,
+      to: bookingData.to,
+      datetime: bookingData.dateTime,
+      seats: bookingData.seats,
+      totalPrice: bookingData.totalPrice || 0,  // Add default value
       status: 'confirmed',
       bookingDate: new Date().toISOString()
-    }
-  );
+    };
+
+    console.log('Creating booking with data:', bookingDocument);
+
+    return await db.createDocument(
+      conf.appwriteDatabaseId,
+      conf.appwriteCollectionIdBookings,
+      ID.unique(),
+      bookingDocument,
+      permissions
+    );
+  } catch (error) {
+    console.error('Error creating booking:', error);
+    throw error;
+  }
 }
 
 /**
- * Get all bookings for a user
- * @param {string} userId
+ * Get bookings for a specific user
+ * @param {string} userId - The ID of the user
  * @returns {Promise<Array>}
  */
-export function getUserBookings(userId) {
-  return db.listDocuments(
-    conf.appwriteDatabaseId,
-    conf.appwriteCollectionIdBookings,
-    [
-      Query.equal('userId', userId)
-    ]
-  ).then(res => res.documents);
+export async function getUserBookings(userId) {
+  try {
+    if (!userId) {
+      throw new Error('User must be logged in to view bookings');
+    }
+
+    const response = await db.listDocuments(
+      conf.appwriteDatabaseId,
+      conf.appwriteCollectionIdBookings,
+      [
+        Query.equal('userId', userId)
+      ]
+    );
+
+    return response.documents;
+  } catch (error) {
+    console.error('Error getting user bookings:', error);
+    throw error;
+  }
 }
 
 /**
@@ -67,16 +105,23 @@ export function getBooking(bookingId) {
 
 /**
  * Cancel a booking
- * @param {string} bookingId
- * @returns {Promise<Object>}
+ * @param {string} bookingId - The ID of the booking
+ * @param {string} userId - The ID of the user
+ * @returns {Promise<void>}
  */
-export function cancelBooking(bookingId) {
-  return db.updateDocument(
-    conf.appwriteDatabaseId,
-    conf.appwriteCollectionIdBookings,
-    bookingId,
-    {
-      status: 'cancelled'
+export async function cancelBooking(bookingId, userId) {
+  try {
+    if (!userId) {
+      throw new Error('User must be logged in to cancel a booking');
     }
-  );
+
+    await db.deleteDocument(
+      conf.appwriteDatabaseId,
+      conf.appwriteCollectionIdBookings,
+      bookingId
+    );
+  } catch (error) {
+    console.error('Error canceling booking:', error);
+    throw error;
+  }
 }

@@ -4,7 +4,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { databases } from "../../lib/appwrite";
 import authService from "../../services/authService";
 import { updateSeats, getAvailableSeats } from "../../services/busService";
-import { createBooking } from '../../services/bookingsService';
+import { createBooking } from "../../services/bookingsService";
 
 const {
   VITE_APPWRITE_DATABASE_ID: DB_ID,
@@ -48,14 +48,10 @@ export default function Checkout() {
       try {
         const currentUser = await authService.getCurrentUser();
         if (!currentUser) throw new Error("Not logged in");
-        
-        const busData = await databases.getDocument(
-          DB_ID,
-          BUSES_COLL,
-          busId
-        );
+
+        const busData = await databases.getDocument(DB_ID, BUSES_COLL, busId);
         setBus(busData);
-        
+
         const seats = await getAvailableSeats(busId);
         setAvailableSeats(seats);
       } catch (error) {
@@ -76,30 +72,43 @@ export default function Checkout() {
     }
   };
 
-  const handlePay = async () => {
+  const handleBook = async () => {
     try {
       const currentUser = await authService.getCurrentUser();
-      if (!currentUser) throw new Error('Not logged in');
+      if (!currentUser) {
+        throw new Error("User not authenticated");
+      }
 
-      // Update available seats
-      await updateSeats(busId, seatsToBook);
+      // Calculate total price
+      const totalPrice = selectedSeats.length * (bus?.price || 0);
 
-      // Create booking
-      await createBooking({
-        userId: currentUser.$id,
+      // Create booking data with all required fields
+      const bookingData = {
+        userId: currentUser.$id, // Make sure this is the correct user ID
         busId: busId,
-        from: bus.from,
-        to: bus.to,
-        dateTime: bus.DateTime,
-        seats: seatsToBook,
-        totalPrice: bus.price * seatsToBook,
-        status: 'confirmed'
-      });
+        from: from,
+        to: to,
+        dateTime: dateTime,
+        seats: selectedSeats,
+        totalPrice: totalPrice,
+        status: "confirmed",
+      };
 
-      alert('Booking successful!');
-      navigate('/bookings');
+      console.log("Creating booking with data:", bookingData);
+
+      // Create the booking
+      const booking = await createBooking(bookingData);
+      console.log("Booking created successfully:", booking);
+
+      // Update bus seats
+      await updateSeats(busId, updatedSeats);
+
+      // Show success message and redirect
+      alert("Booking confirmed successfully!");
+      navigate("/bookings");
     } catch (error) {
-      alert(error.message || 'Failed to complete booking');
+      console.error("Booking error:", error);
+      alert(error.message);
     }
   };
 
@@ -121,7 +130,7 @@ export default function Checkout() {
     <div className="min-h-screen bg-[#FFF3E0] p-6 flex justify-center">
       <div className="w-full max-w-lg bg-white p-8 rounded-lg shadow">
         <h2 className="text-2xl font-semibold text-[#424242] mb-4">
-          Bus Checkout
+          Bus Booking Summary
         </h2>
         <div className="space-y-2 text-[#424242] mb-6">
           <div>
@@ -135,7 +144,8 @@ export default function Checkout() {
             {formatDateTime(bus.DateTime)}
           </div>
           <div>
-            <span className="font-medium">Available Seats:</span> {availableSeats}
+            <span className="font-medium">Available Seats:</span>{" "}
+            {availableSeats}
           </div>
           <div className="mt-4">
             <label className="block text-sm font-medium text-gray-700">
@@ -151,15 +161,16 @@ export default function Checkout() {
             />
           </div>
           <div>
-            <span className="font-medium">Total Price:</span> ${bus.price * seatsToBook}
+            <span className="font-medium">Total Price:</span> $
+            {bus.price * seatsToBook}
           </div>
         </div>
         <button
-          onClick={handlePay}
+          onClick={handleBook}
           className="w-full bg-[#FFA726] hover:bg-[#FB8C00] text-white py-3 rounded-lg"
           disabled={availableSeats === 0}
         >
-          {availableSeats === 0 ? "No Seats Available" : "Pay Now"}
+          {availableSeats === 0 ? "No Seats Available" : "Confirm Booking"}
         </button>
       </div>
     </div>

@@ -1,10 +1,10 @@
 // src/services/busService.js
 import conf from "../conf/conf.js";
-import { Client, Databases } from "appwrite";
+import { Client, Databases, Permission, Role } from "appwrite";
 
 const client = new Client()
-  .setEndpoint(conf.appwriteUrl) // e.g. "https://fra.cloud.appwrite.io/v1"
-  .setProject(conf.appwriteProjectId); // your project ID
+  .setEndpoint('https://fra.cloud.appwrite.io/v1')
+  .setProject(conf.appwriteProjectId);
 
 const db = new Databases(client);
 
@@ -37,12 +37,17 @@ export function getBus(busId) {
 }
 
 /**
- * Update available seats for a bus
+ * Update available seats for a bus (requires authentication)
  * @param {string} busId
  * @param {number} seatsToBook
+ * @param {string} userId
  * @returns {Promise<Object>}
  */
-export function updateSeats(busId, seatsToBook) {
+export function updateSeats(busId, seatsToBook, userId) {
+  if (!userId) {
+    throw new Error('User must be logged in to update seats');
+  }
+
   return db.getDocument(
     conf.appwriteDatabaseId,
     conf.appwriteCollectionIdBuses,
@@ -58,7 +63,10 @@ export function updateSeats(busId, seatsToBook) {
       busId,
       {
         availableSeats: currentSeats - seatsToBook
-      }
+      },
+      [
+        Permission.update(Role.user(userId))
+      ]
     );
   });
 }
