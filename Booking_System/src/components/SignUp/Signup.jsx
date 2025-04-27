@@ -42,22 +42,25 @@ export default function SignUpPage() {
 
     setLoading(true);
     try {
-      // 1️⃣ Ensure any existing session is cleared
-      try {
-        await authService.logout();
-      } catch {
-        // ignore if no session existed
-      }
-
-      // 2️⃣ Create new account + session + profile doc
       const fullName = `${firstName.trim()} ${lastName.trim()}`;
-      await authService.createAccount({ email, password, name: fullName });
+      const session = await authService.createAccount({ 
+        email, 
+        password, 
+        name: fullName 
+      });
 
-      // 3️⃣ Navigate home and force a full reload
-      navigate("/", { replace: true });
-      window.location.reload();
+      if (session) {
+        navigate("/", { replace: true });
+      } else {
+        throw new Error("Failed to create account");
+      }
     } catch (err) {
-      setError(err.message || "Signup failed. Please try again.");
+      console.error('Signup error:', err);
+      if (err.message.includes('unique index')) {
+        setError('An account with this email already exists.');
+      } else {
+        setError(err.message || "Failed to create account. Please try again.");
+      }
     } finally {
       setLoading(false);
     }

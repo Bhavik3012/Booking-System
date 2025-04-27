@@ -8,24 +8,39 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch current user (or null) on mount
-    authService.getCurrentUser().then(async (user) => {
-      setUser(user);
-      if (user) {
-        const adminStatus = await authService.isAdmin();
-        setIsAdmin(adminStatus);
+    const checkAuth = async () => {
+      try {
+        const currentUser = await authService.getCurrentUser();
+        setUser(currentUser);
+        if (currentUser) {
+          const adminStatus = await authService.isAdmin();
+          setIsAdmin(adminStatus);
+        }
+      } catch (error) {
+        console.error('Auth check error:', error);
+        setUser(null);
+        setIsAdmin(false);
+      } finally {
+        setLoading(false);
       }
-    });
+    };
+
+    checkAuth();
   }, []);
 
   const handleLogout = async () => {
-    await authService.logout();
-    setUser(null);
-    setIsAdmin(false);
-    navigate("/login", { replace: true });
+    try {
+      await authService.logout();
+      setUser(null);
+      setIsAdmin(false);
+      navigate("/login", { replace: true });
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   const navItems = [
