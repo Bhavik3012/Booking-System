@@ -27,15 +27,15 @@ class AuthService {
 
       if (userAccount) {
         const currentTime = new Date().toISOString();
-        
+
         // Create user document with required attributes
         const userDocument = {
           name: name,
           email: email,
-          role: 'user',
+          role: "user",
           userId: userAccount.$id,
           createdAt: currentTime,
-          updatedAt: currentTime
+          updatedAt: currentTime,
         };
 
         // Create user document in database with correct permissions
@@ -43,12 +43,7 @@ class AuthService {
           conf.appwriteDatabaseId,
           conf.appwriteCollectionIdUser,
           userAccount.$id,
-          userDocument,
-          [
-            Permission.read(Role.any()),
-            Permission.write(Role.user(userAccount.$id)),
-            Permission.delete(Role.user(userAccount.$id))
-          ]
+          userDocument
         );
 
         // Create session and return it
@@ -57,9 +52,11 @@ class AuthService {
         throw new Error("Failed to create user account");
       }
     } catch (error) {
-      console.error('Error creating account:', error);
+      console.error("Error creating account:", error);
       if (error.code === 429) {
-        throw new Error("Too many signup attempts. Please wait a few minutes and try again.");
+        throw new Error(
+          "Too many signup attempts. Please wait a few minutes and try again."
+        );
       }
       throw error;
     }
@@ -87,12 +84,7 @@ class AuthService {
         name,
         email,
         role: "admin",
-      },
-      [
-        Permission.read(Role.any()), // Can read all documents
-        Permission.update(Role.any()), // Can update all documents
-        Permission.delete(Role.any()), // Can delete all documents
-      ]
+      }
     );
     return session;
   }
@@ -102,7 +94,7 @@ class AuthService {
     try {
       // First check if there's an active session
       try {
-        const session = await this.account.getSession('current');
+        const session = await this.account.getSession("current");
         if (session) {
           // If there's an active session, delete it first
           await this.account.deleteSessions();
@@ -110,16 +102,19 @@ class AuthService {
       } catch (error) {
         // 401 is expected when no session exists
         if (error.code !== 401) {
-          console.error('Error checking session:', error);
+          console.error("Error checking session:", error);
         }
       }
 
       // Create new session (this verifies auth credentials)
-      const session = await this.account.createEmailPasswordSession(email, password);
-      
+      const session = await this.account.createEmailPasswordSession(
+        email,
+        password
+      );
+
       // Get account details from auth system
       const account = await this.account.get();
-      
+
       // Check if user document exists in database
       try {
         const userDoc = await this.db.getDocument(
@@ -127,7 +122,7 @@ class AuthService {
           conf.appwriteCollectionIdUser,
           account.$id
         );
-        
+
         // If we get here, user exists in both places
         return session;
       } catch (error) {
@@ -140,9 +135,11 @@ class AuthService {
         throw error;
       }
     } catch (error) {
-      console.error('Error logging in:', error);
+      console.error("Error logging in:", error);
       if (error.code === 429) {
-        throw new Error("Too many login attempts. Please wait a few minutes and try again.");
+        throw new Error(
+          "Too many login attempts. Please wait a few minutes and try again."
+        );
       }
       throw error;
     }
@@ -153,21 +150,21 @@ class AuthService {
     try {
       // First check if we have a valid session
       try {
-        const session = await this.account.getSession('current');
+        const session = await this.account.getSession("current");
         if (!session) {
           return null;
         }
       } catch (error) {
         // 401 is expected when not logged in
         if (error.code !== 401) {
-          console.error('Error checking session:', error);
+          console.error("Error checking session:", error);
         }
         return null;
       }
 
       // Get the account details
       const account = await this.account.get();
-      
+
       // Get the user profile from database
       try {
         const profile = await this.db.getDocument(
@@ -183,10 +180,10 @@ class AuthService {
           const userDocument = {
             name: account.name,
             email: account.email,
-            role: 'user',
+            role: "user",
             userId: account.$id,
             createdAt: currentTime,
-            updatedAt: currentTime
+            updatedAt: currentTime,
           };
 
           // Create document with proper permissions
@@ -194,24 +191,19 @@ class AuthService {
             conf.appwriteDatabaseId,
             conf.appwriteCollectionIdUser,
             account.$id,
-            userDocument,
-            [
-              Permission.read(Role.any()),
-              Permission.write(Role.user(account.$id)),
-              Permission.delete(Role.user(account.$id))
-            ]
+            userDocument
           );
 
           return { ...account, ...userDocument };
         }
-        console.error('Error getting user profile:', error);
+        console.error("Error getting user profile:", error);
         return account;
       }
     } catch (error) {
       if (error?.code === 401) {
         return null;
       }
-      console.error('Error getting current user:', error);
+      console.error("Error getting current user:", error);
       return null;
     }
   }
@@ -220,9 +212,9 @@ class AuthService {
   async isAdmin() {
     try {
       const user = await this.getCurrentUser();
-      return user?.role === 'admin';
+      return user?.role === "admin";
     } catch (error) {
-      console.error('Error checking admin status:', error);
+      console.error("Error checking admin status:", error);
       return false;
     }
   }
@@ -242,7 +234,7 @@ class AuthService {
     try {
       await this.account.deleteSessions();
     } catch (error) {
-      console.error('Error logging out:', error);
+      console.error("Error logging out:", error);
     }
   }
 }

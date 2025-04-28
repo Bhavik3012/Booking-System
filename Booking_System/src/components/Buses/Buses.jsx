@@ -190,8 +190,11 @@ export default function Buses() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {results.map((bus) => {
-              // Use your Appwrite attribute key "DateTime" here:
-              const iso = bus.DateTime;
+              // Debug log to see the bus object structure
+              console.log('Bus object:', bus);
+              
+              // Try different possible date field names
+              const dateField = bus.dateTime || bus.DateTime || bus.departureTime || bus.departure_date;
               return (
                 <Card
                   key={bus.$id}
@@ -201,7 +204,9 @@ export default function Buses() {
                     <h4 className="font-bold text-lg text-[#424242]">
                       {bus.from} — {bus.to}
                     </h4>
-                    <p className="mt-2 text-[#424242]">DateTime: {formatDateTime(iso)}</p>
+                    <p className="mt-2 text-[#424242]">
+                      <span className="font-medium">Date & Time:</span> {dateField ? formatDateTime(dateField) : 'Not available'}
+                    </p>
                     <p className="text-[#424242]">
                       <span className="font-medium">Type:</span> {bus.type}
                     </p>

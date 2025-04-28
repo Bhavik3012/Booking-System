@@ -5,6 +5,9 @@ import { useNavigate } from "react-router-dom";
 import { getUserBookings } from "../../services/bookingsService";
 import { Card, CardContent } from "../../components/ui/Card";
 
+/**
+ * Turn an ISO string into "MM/DD/YYYY hh:mm:ss.SSS AM/PM"
+ */
 function formatDateTime(iso) {
   const d = new Date(iso);
   if (isNaN(d)) return "Invalid date";
@@ -93,7 +96,7 @@ export default function Profile() {
               {user.$createdAt && (
                 <div>
                   <span className="font-medium">Member since: </span>
-                  {new Date(user.$createdAt).toLocaleDateString()}
+                  {formatDateTime(user.$createdAt)}
                 </div>
               )}
             </div>
@@ -114,45 +117,50 @@ export default function Profile() {
               <p className="text-center text-[#424242]">No bookings found.</p>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {bookings.map((booking) => (
-                  <Card
-                    key={booking.$id}
-                    className={`border ${
-                      booking.status === "cancelled"
-                        ? "border-red-500"
-                        : "border-[#FFA726]"
-                    }`}
-                  >
-                    <CardContent className="p-4">
-                      <h3 className="font-bold text-lg text-[#424242]">
-                        {booking.from} → {booking.to}
-                      </h3>
-                      <p className="text-[#424242] mt-2">
-                        <span className="font-medium">Date & Time:</span>{" "}
-                        {formatDateTime(booking.dateTime)}
-                      </p>
-                      <p className="text-[#424242]">
-                        <span className="font-medium">Seats:</span> {booking.seats}
-                      </p>
-                      <p className="text-[#424242]">
-                        <span className="font-medium">Total Price:</span> $
-                        {booking.totalPrice}
-                      </p>
-                      <p className="text-[#424242]">
-                        <span className="font-medium">Status:</span>{" "}
-                        <span
-                          className={`${
-                            booking.status === "confirmed"
-                              ? "text-green-600"
-                              : "text-red-600"
-                          }`}
-                        >
-                          {booking.status}
-                        </span>
-                      </p>
-                    </CardContent>
-                  </Card>
-                ))}
+                {bookings.map((booking) => {
+                  // Try different possible date field names
+                  const dateField = booking.dateTime || booking.DateTime || booking.departureTime || booking.departure_date;
+                  return (
+                    <Card
+                      key={booking.$id}
+                      className={`border ${
+                        booking.status === "cancelled"
+                          ? "border-red-500"
+                          : "border-[#FFA726]"
+                      }`}
+                    >
+                      <CardContent className="p-4">
+                        <h3 className="font-bold text-lg text-[#424242]">
+                          {booking.from} → {booking.to}
+                        </h3>
+                        <p className="text-[#424242] mt-2">
+                          <span className="font-medium">Date & Time:</span>{" "}
+                          {dateField ? formatDateTime(dateField) : 'Not available'}
+                        </p>
+                        <p className="text-[#424242]">
+                          <span className="font-medium">Seats:</span>{" "}
+                          {booking.seats}
+                        </p>
+                        <p className="text-[#424242]">
+                          <span className="font-medium">Total Price:</span> $
+                          {booking.totalPrice}
+                        </p>
+                        <p className="text-[#424242]">
+                          <span className="font-medium">Status:</span>{" "}
+                          <span
+                            className={`${
+                              booking.status === "confirmed"
+                                ? "text-green-600"
+                                : "text-red-600"
+                            }`}
+                          >
+                            {booking.status}
+                          </span>
+                        </p>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
               </div>
             )}
           </div>

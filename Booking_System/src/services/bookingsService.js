@@ -27,13 +27,13 @@ export async function createBooking(bookingData) {
 
     // Create the booking document with correct attribute names
     const bookingDocument = {
-      userId: bookingData.userId,  // Changed from userid to userId
+      userId: bookingData.userId,
       busId: bookingData.busId,
       from: bookingData.from,
       to: bookingData.to,
-      datetime: bookingData.dateTime,
+      dateTime: bookingData.dateTime,
       seats: bookingData.seats,
-      totalPrice: bookingData.totalPrice || 0,  // Add default value
+      totalPrice: bookingData.totalPrice || 0,
       status: 'confirmed',
       bookingDate: new Date().toISOString()
     };

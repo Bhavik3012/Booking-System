@@ -80,16 +80,19 @@ export default function Checkout() {
       }
 
       // Calculate total price
-      const totalPrice = selectedSeats.length * (bus?.price || 0);
+      const totalPrice = seatsToBook * (bus?.price || 0);
+
+      // Create an array of seat numbers
+      const seatNumbers = Array.from({ length: seatsToBook }, (_, i) => i + 1);
 
       // Create booking data with all required fields
       const bookingData = {
-        userId: currentUser.$id, // Make sure this is the correct user ID
+        userId: currentUser.$id,
         busId: busId,
-        from: from,
-        to: to,
-        dateTime: dateTime,
-        seats: selectedSeats,
+        from: bus.from,
+        to: bus.to,
+        dateTime: bus.dateTime || bus.DateTime || bus.departureTime || bus.departure_date,
+        seats: seatNumbers,
         totalPrice: totalPrice,
         status: "confirmed",
       };
@@ -101,7 +104,7 @@ export default function Checkout() {
       console.log("Booking created successfully:", booking);
 
       // Update bus seats
-      await updateSeats(busId, updatedSeats);
+      await updateSeats(busId, seatsToBook, currentUser.$id);
 
       // Show success message and redirect
       alert("Booking confirmed successfully!");
@@ -124,7 +127,8 @@ export default function Checkout() {
     );
   }
 
-  const dt = new Date(bus.DateTime);
+  // Try different possible date field names
+  const dateField = bus.dateTime || bus.DateTime || bus.departureTime || bus.departure_date;
 
   return (
     <div className="min-h-screen bg-[#FFF3E0] p-6 flex justify-center">
@@ -141,7 +145,7 @@ export default function Checkout() {
           </div>
           <div>
             <span className="font-medium">Date & Time:</span>{" "}
-            {formatDateTime(bus.DateTime)}
+            {dateField ? formatDateTime(dateField) : 'Not available'}
           </div>
           <div>
             <span className="font-medium">Available Seats:</span>{" "}

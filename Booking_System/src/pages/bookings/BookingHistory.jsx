@@ -3,6 +3,28 @@ import React, { useState, useEffect } from "react";
 import authService from "../../services/authService";
 import { getUserBookings } from "../../services/bookingsService";
 import { Link } from "react-router-dom";
+import { Card, CardContent } from "../../components/ui/Card";
+
+/**
+ * Turn an ISO string into "MM/DD/YYYY hh:mm:ss.SSS AM/PM"
+ */
+function formatDateTime(iso) {
+  const d = new Date(iso);
+  if (isNaN(d)) return "Invalid date";
+
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  const yyyy = d.getFullYear();
+
+  const hh = d.getHours();
+  const h12 = hh % 12 === 0 ? 12 : hh % 12;
+  const min = String(d.getMinutes()).padStart(2, "0");
+  const sec = String(d.getSeconds()).padStart(2, "0");
+  const ms = String(d.getMilliseconds()).padStart(3, "0");
+  const ampm = hh >= 12 ? "PM" : "AM";
+
+  return `${mm}/${dd}/${yyyy} ${String(h12).padStart(2, "0")}:${min}:${sec}.${ms} ${ampm}`;
+}
 
 export default function BookingHistory() {
   const [bookings, setBookings] = useState([]);
@@ -76,26 +98,45 @@ export default function BookingHistory() {
           </Link>
         </p>
       ) : (
-        <div className="space-y-4 max-w-3xl mx-auto">
-          {bookings.map((b) => (
-            <div
-              key={b.$id}
-              className="bg-white p-6 rounded-lg shadow flex justify-between items-center"
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+          {bookings.map((booking) => (
+            <Card
+              key={booking.$id}
+              className={`border ${
+                booking.status === "cancelled"
+                  ? "border-red-500"
+                  : "border-[#FFA726]"
+              }`}
             >
-              <div>
-                <div className="font-semibold text-lg text-[#424242]">
-                  {b.serviceType} Booking
-                </div>
-                <div className="text-[#424242]">Date: {b.date}</div>
-                <div className="text-[#424242]">Details: {b.details}</div>
-              </div>
-              <Link
-                to={`/checkout?bookingId=${b.$id}`}
-                className="px-4 py-2 bg-[#FFA726] text-white rounded hover:bg-[#FB8C00]"
-              >
-                Checkout
-              </Link>
-            </div>
+              <CardContent className="p-4">
+                <h3 className="font-bold text-lg text-[#424242]">
+                  {booking.from} → {booking.to}
+                </h3>
+                <p className="text-[#424242] mt-2">
+                  <span className="font-medium">Date & Time:</span>{" "}
+                  {formatDateTime(booking.dateTime)}
+                </p>
+                <p className="text-[#424242]">
+                  <span className="font-medium">Seats:</span> {booking.seats}
+                </p>
+                <p className="text-[#424242]">
+                  <span className="font-medium">Total Price:</span> $
+                  {booking.totalPrice}
+                </p>
+                <p className="text-[#424242]">
+                  <span className="font-medium">Status:</span>{" "}
+                  <span
+                    className={`${
+                      booking.status === "confirmed"
+                        ? "text-green-600"
+                        : "text-red-600"
+                    }`}
+                  >
+                    {booking.status}
+                  </span>
+                </p>
+              </CardContent>
+            </Card>
           ))}
         </div>
       )}

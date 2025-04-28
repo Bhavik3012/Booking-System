@@ -62,7 +62,8 @@ export function updateSeats(busId, seatsToBook, userId) {
       conf.appwriteCollectionIdBuses,
       busId,
       {
-        availableSeats: currentSeats - seatsToBook
+        availableSeats: currentSeats - seatsToBook,
+        userId: userId
       },
       [
         Permission.update(Role.user(userId))
