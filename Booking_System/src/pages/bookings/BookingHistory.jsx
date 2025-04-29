@@ -98,46 +98,92 @@ export default function BookingHistory() {
           </Link>
         </p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
-          {bookings.map((booking) => (
-            <Card
-              key={booking.$id}
-              className={`border ${
-                booking.status === "cancelled"
-                  ? "border-red-500"
-                  : "border-[#FFA726]"
-              }`}
-            >
-              <CardContent className="p-4">
-                <h3 className="font-bold text-lg text-[#424242]">
-                  {booking.from} → {booking.to}
-                </h3>
-                <p className="text-[#424242] mt-2">
-                  <span className="font-medium">Date & Time:</span>{" "}
-                  {formatDateTime(booking.dateTime)}
-                </p>
-                <p className="text-[#424242]">
-                  <span className="font-medium">Seats:</span> {booking.seats}
-                </p>
-                <p className="text-[#424242]">
-                  <span className="font-medium">Total Price:</span> $
-                  {booking.totalPrice}
-                </p>
-                <p className="text-[#424242]">
-                  <span className="font-medium">Status:</span>{" "}
-                  <span
-                    className={`${
-                      booking.status === "confirmed"
-                        ? "text-green-600"
-                        : "text-red-600"
-                    }`}
+        <div className="max-w-6xl mx-auto">
+          {/* Current Bookings Section */}
+          <div className="mb-8">
+            <h3 className="text-2xl font-semibold text-[#424242] mb-4">
+              Current Bookings
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {bookings
+                .filter(booking => booking.status === "confirmed")
+                .map((booking) => (
+                  <Card
+                    key={booking.$id}
+                    className="border border-[#FFA726]"
                   >
-                    {booking.status}
-                  </span>
-                </p>
-              </CardContent>
-            </Card>
-          ))}
+                    <CardContent className="p-4">
+                      <h3 className="font-bold text-lg text-[#424242]">
+                        {booking.from} → {booking.to}
+                      </h3>
+                      <p className="text-[#424242] mt-2">
+                        <span className="font-medium">Date & Time:</span>{" "}
+                        {formatDateTime(booking.dateTime)}
+                      </p>
+                      <p className="text-[#424242]">
+                        <span className="font-medium">Seat Numbers:</span>{" "}
+                        {Array.isArray(booking.seats) 
+                          ? booking.seats.join(', ')
+                          : booking.seats}
+                      </p>
+                      <p className="text-[#424242]">
+                        <span className="font-medium">Total Price:</span> $
+                        {booking.totalPrice}
+                      </p>
+                      <p className="text-[#424242]">
+                        <span className="font-medium">Status:</span>{" "}
+                        <span className="text-green-600">
+                          {booking.status}
+                        </span>
+                      </p>
+                    </CardContent>
+                  </Card>
+                ))}
+            </div>
+          </div>
+
+          {/* Past Bookings Section */}
+          <div>
+            <h3 className="text-2xl font-semibold text-[#424242] mb-4">
+              Past Bookings
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {bookings
+                .filter(booking => booking.status === "cancelled")
+                .map((booking) => (
+                  <Card
+                    key={booking.$id}
+                    className="border border-red-500"
+                  >
+                    <CardContent className="p-4">
+                      <h3 className="font-bold text-lg text-[#424242]">
+                        {booking.from} → {booking.to}
+                      </h3>
+                      <p className="text-[#424242] mt-2">
+                        <span className="font-medium">Date & Time:</span>{" "}
+                        {formatDateTime(booking.dateTime)}
+                      </p>
+                      <p className="text-[#424242]">
+                        <span className="font-medium">Seat Numbers:</span>{" "}
+                        {Array.isArray(booking.seats) 
+                          ? booking.seats.join(', ')
+                          : booking.seats}
+                      </p>
+                      <p className="text-[#424242]">
+                        <span className="font-medium">Total Price:</span> $
+                        {booking.totalPrice}
+                      </p>
+                      <p className="text-[#424242]">
+                        <span className="font-medium">Status:</span>{" "}
+                        <span className="text-red-600">
+                          {booking.status}
+                        </span>
+                      </p>
+                    </CardContent>
+                  </Card>
+                ))}
+            </div>
+          </div>
         </div>
       )}
     </div>

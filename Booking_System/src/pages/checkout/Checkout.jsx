@@ -82,8 +82,14 @@ export default function Checkout() {
       // Calculate total price
       const totalPrice = seatsToBook * (bus?.price || 0);
 
-      // Create an array of seat numbers
-      const seatNumbers = Array.from({ length: seatsToBook }, (_, i) => i + 1);
+      // Get current available seats
+      const currentAvailableSeats = await getAvailableSeats(busId);
+      
+      // Create an array of seat numbers starting from the first available seat
+      const seatNumbers = Array.from(
+        { length: seatsToBook }, 
+        (_, i) => currentAvailableSeats - i
+      ).reverse();
 
       // Create booking data with all required fields
       const bookingData = {
@@ -95,6 +101,7 @@ export default function Checkout() {
         seats: seatNumbers,
         totalPrice: totalPrice,
         status: "confirmed",
+        bookingDate: new Date().toISOString()
       };
 
       console.log("Creating booking with data:", bookingData);
@@ -107,7 +114,7 @@ export default function Checkout() {
       await updateSeats(busId, seatsToBook, currentUser.$id);
 
       // Show success message and redirect
-      alert("Booking confirmed successfully!");
+      alert(`Booking confirmed successfully! Your seat numbers are: ${seatNumbers.join(', ')}`);
       navigate("/bookings");
     } catch (error) {
       console.error("Booking error:", error);
