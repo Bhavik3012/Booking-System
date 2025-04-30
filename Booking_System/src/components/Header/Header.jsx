@@ -68,6 +68,7 @@ export default function Header() {
               src={logo}
               alt="Logo"
               className="h-16 w-auto"
+              style={{ width: '80%', height: 'auto' }}
             />
           </Link>
 
