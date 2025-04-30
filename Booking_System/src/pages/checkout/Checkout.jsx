@@ -103,8 +103,7 @@ export default function Checkout() {
       // Create booking data with all required fields
       const bookingData = {
         userId: currentUser.$id,
-        serviceType: busId ? "bus" : "train",
-        serviceId: busId || trainId,
+        busId: busId || trainId,
         from: service.from,
         to: service.to,
         dateTime: service.dateTime || service.DateTime || service.departureTime || service.departure_date,

@@ -1,6 +1,7 @@
 // src/components/Footer/Footer.jsx
 import React from "react";
 import { Link } from "react-router-dom";
+import logo from "../../assets/logo1.png";
 
 export default function Footer() {
   return (
@@ -12,8 +13,8 @@ export default function Footer() {
           <div className="mb-8 md:mb-0 md:w-1/3">
             <Link to="/" className="flex items-center">
               <img
-                src="https://www.cdnlogo.com/logos/b/94/booking-com.svg"
-                className="mr-3 h-16"
+                src={logo}
+                className="mr-3 h-18"
                 alt="Logo"
               />
               <span className="self-center text-2xl font-semibold whitespace-nowrap text-[#FB8C00]">
@@ -167,7 +168,7 @@ export default function Footer() {
         {/* Bottom Section */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <span className="text-sm text-[#424242] sm:text-center">
-            © {new Date().getFullYear()} Booking System. All Rights Reserved.
+            © {new Date().getFullYear()} Secure Your Seat. All Rights Reserved.
           </span>
         </div>
       </div>

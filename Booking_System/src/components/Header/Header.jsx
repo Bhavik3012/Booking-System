@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import authService from "../../services/authService";
 import { FiUser } from "react-icons/fi";
+import logo from "../../assets/logo1.png";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -64,9 +65,9 @@ export default function Header() {
             className="flex-shrink-0 flex items-center transform transition hover:scale-105"
           >
             <img
-              src="https://www.cdnlogo.com/logos/b/94/booking-com.svg"
+              src={logo}
               alt="Logo"
-              className="h-8 w-auto"
+              className="h-16 w-auto"
             />
           </Link>
 
