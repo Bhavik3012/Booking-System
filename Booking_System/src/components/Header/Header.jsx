@@ -46,10 +46,10 @@ export default function Header() {
 
   const navItems = [
     "Home",
-    "Trains",
     "Flights",
-    "Hotels",
+    "Trains",
     "Buses",
+    "Hotels",
     "Homestays",
     "Trips",
     "About",
