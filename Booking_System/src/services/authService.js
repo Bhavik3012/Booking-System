@@ -1,5 +1,5 @@
 // src/services/authService.js
-import conf from "../conf/conf.js";
+import { conf } from "../conf/conf.js";
 import { Client, Account, Databases, ID, Permission, Role } from "appwrite";
 
 class AuthService {

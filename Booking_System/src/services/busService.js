@@ -1,5 +1,5 @@
 // src/services/busService.js
-import conf from "../conf/conf.js";
+import { conf } from "../conf/conf.js";
 import { Client, Databases, Permission, Role } from "appwrite";
 
 const client = new Client()

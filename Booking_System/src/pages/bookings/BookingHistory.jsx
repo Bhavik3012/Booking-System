@@ -117,6 +117,10 @@ export default function BookingHistory() {
                         {booking.from} → {booking.to}
                       </h3>
                       <p className="text-[#424242] mt-2">
+                        <span className="font-medium">Service Type:</span>{" "}
+                        {booking.serviceType === "bus" ? "Bus" : "Train"}
+                      </p>
+                      <p className="text-[#424242]">
                         <span className="font-medium">Date & Time:</span>{" "}
                         {formatDateTime(booking.dateTime)}
                       </p>

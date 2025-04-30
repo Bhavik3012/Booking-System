@@ -1,5 +1,5 @@
 // src/services/bookingsService.js
-import conf from "../conf/conf.js";
+import { conf } from "../conf/conf.js";
 import { Client, Databases, ID, Permission, Role, Query } from "appwrite";
 
 const client = new Client()

@@ -35,35 +35,42 @@ function formatDateTime(iso) {
 export default function Checkout() {
   const [searchParams] = useSearchParams();
   const busId = searchParams.get("busId");
-  const [bus, setBus] = useState(null);
+  const trainId = searchParams.get("trainId");
+  const [service, setService] = useState(null);
   const [loading, setLoading] = useState(true);
   const [availableSeats, setAvailableSeats] = useState(0);
   const [seatsToBook, setSeatsToBook] = useState(1);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!busId) return;
+    if (!busId && !trainId) return;
 
-    const fetchBusAndSeats = async () => {
+    const fetchServiceAndSeats = async () => {
       try {
         const currentUser = await authService.getCurrentUser();
         if (!currentUser) throw new Error("Not logged in");
 
-        const busData = await databases.getDocument(DB_ID, BUSES_COLL, busId);
-        setBus(busData);
-
-        const seats = await getAvailableSeats(busId);
-        setAvailableSeats(seats);
+        if (busId) {
+          const busData = await databases.getDocument(DB_ID, BUSES_COLL, busId);
+          setService(busData);
+          const seats = await getAvailableSeats(busId);
+          setAvailableSeats(seats);
+        } else if (trainId) {
+          const trainData = await databases.getDocument(DB_ID, TRAINS_COLL, trainId);
+          setService(trainData);
+          const seats = await getAvailableTrainSeats(trainId);
+          setAvailableSeats(seats);
+        }
       } catch (error) {
         console.error("Error:", error);
-        setBus(null);
+        setService(null);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchBusAndSeats();
-  }, [busId]);
+    fetchServiceAndSeats();
+  }, [busId, trainId]);
 
   const handleSeatChange = (e) => {
     const value = parseInt(e.target.value);
@@ -80,10 +87,12 @@ export default function Checkout() {
       }
 
       // Calculate total price
-      const totalPrice = seatsToBook * (bus?.price || 0);
+      const totalPrice = seatsToBook * (service?.price || 0);
 
       // Get current available seats
-      const currentAvailableSeats = await getAvailableSeats(busId);
+      const currentAvailableSeats = busId 
+        ? await getAvailableSeats(busId)
+        : await getAvailableTrainSeats(trainId);
       
       // Create an array of seat numbers starting from the first available seat
       const seatNumbers = Array.from(
@@ -94,10 +103,11 @@ export default function Checkout() {
       // Create booking data with all required fields
       const bookingData = {
         userId: currentUser.$id,
-        busId: busId,
-        from: bus.from,
-        to: bus.to,
-        dateTime: bus.dateTime || bus.DateTime || bus.departureTime || bus.departure_date,
+        serviceType: busId ? "bus" : "train",
+        serviceId: busId || trainId,
+        from: service.from,
+        to: service.to,
+        dateTime: service.dateTime || service.DateTime || service.departureTime || service.departure_date,
         seats: seatNumbers,
         totalPrice: totalPrice,
         status: "confirmed",
@@ -110,8 +120,12 @@ export default function Checkout() {
       const booking = await createBooking(bookingData);
       console.log("Booking created successfully:", booking);
 
-      // Update bus seats
-      await updateSeats(busId, seatsToBook, currentUser.$id);
+      // Update seats
+      if (busId) {
+        await updateSeats(busId, seatsToBook, currentUser.$id);
+      } else {
+        await updateTrainSeats(trainId, seatsToBook, currentUser.$id);
+      }
 
       // Show success message and redirect
       alert(`Booking confirmed successfully! Your seat numbers are: ${seatNumbers.join(', ')}`);
@@ -126,29 +140,29 @@ export default function Checkout() {
     return <div className="text-center py-20">Loading checkout…</div>;
   }
 
-  if (!bus) {
+  if (!service) {
     return (
       <div className="text-center py-20 text-[#424242]">
-        Bus not found or you don't have access.
+        {busId ? "Bus" : "Train"} not found or you don't have access.
       </div>
     );
   }
 
   // Try different possible date field names
-  const dateField = bus.dateTime || bus.DateTime || bus.departureTime || bus.departure_date;
+  const dateField = service.dateTime || service.DateTime || service.departureTime || service.departure_date;
 
   return (
     <div className="min-h-screen bg-[#FFF3E0] p-6 flex justify-center">
       <div className="w-full max-w-lg bg-white p-8 rounded-lg shadow">
         <h2 className="text-2xl font-semibold text-[#424242] mb-4">
-          Bus Booking Summary
+          {busId ? "Bus" : "Train"} Booking Summary
         </h2>
         <div className="space-y-2 text-[#424242] mb-6">
           <div>
-            <span className="font-medium">Route:</span> {bus.from} → {bus.to}
+            <span className="font-medium">Route:</span> {service.from} → {service.to}
           </div>
           <div>
-            <span className="font-medium">Type:</span> {bus.type}
+            <span className="font-medium">Type:</span> {service.type}
           </div>
           <div>
             <span className="font-medium">Date & Time:</span>{" "}
@@ -157,6 +171,9 @@ export default function Checkout() {
           <div>
             <span className="font-medium">Available Seats:</span>{" "}
             {availableSeats}
+          </div>
+          <div>
+            <span className="font-medium">Price per Seat:</span> ${service.price}
           </div>
           <div className="mt-4">
             <label className="block text-sm font-medium text-gray-700">
@@ -173,7 +190,7 @@ export default function Checkout() {
           </div>
           <div>
             <span className="font-medium">Total Price:</span> $
-            {bus.price * seatsToBook}
+            {service.price * seatsToBook}
           </div>
         </div>
         <button

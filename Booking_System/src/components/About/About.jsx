@@ -38,7 +38,7 @@ export default function AboutPage() {
         <section>
           <h3 className="text-3xl font-bold text-[#424242] mb-4">Our Story</h3>
           <p className="text-lg text-[#424242]">
-            Founded in 2020, our company is dedicated to making travel simple and accessible.
+            Founded in 2025, our company is dedicated to making travel simple and accessible.
             With a passion for adventure and a commitment to quality, we have grown to offer a wide range of travel services,
             including trips, hotel bookings, bus tours, and homestays.
           </p>
@@ -72,7 +72,9 @@ export default function AboutPage() {
         </section>
 
         <section className="text-center">
-          <Button className="bg-[#FB8C00] hover:bg-[#FB8C00] text-white px-8 py-3">
+          <Button className="bg-[#FB8C00] hover:bg-[#FB8C00] text-white px-8 py-3"
+         
+          >
             Contact Us
           </Button>
         </section>
